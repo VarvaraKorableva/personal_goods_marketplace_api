@@ -14,12 +14,17 @@ export const _createCategory = async (name, is_good, parent_id) => {
   }
 };
 
-export const _getAllCategory = () => {
-  return db("сategory").select("*").orderBy("сategory_id");
+export const _getAllCategory = async () => {
+    try {
+        const result = await db("category").select("*").orderBy("category_id")
+        return result
+    } catch (error) {
+        throw new Error(`error in category.models: ${error.message}`);
+    }
 };
   
-export const _deleteCategory = (сategory_id) => {
-    return db("сategory").delete("*").where({ сategory_id })
+export const _deleteCategory = (category_id) => {
+    return db("category").delete("*").where({ category_id })
   };
 
 /*
