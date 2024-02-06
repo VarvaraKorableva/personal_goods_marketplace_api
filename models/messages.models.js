@@ -31,7 +31,7 @@ export const _getAllUserMessages = async (receiver_id, sender_id) => {
   
 export const _deleteMessage = (message_id) => {
     return db("messages").delete("*").where({ message_id })
-  };
+};
 
 
 /*CREATE TABLE messages (
