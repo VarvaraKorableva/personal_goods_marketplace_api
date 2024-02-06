@@ -5,6 +5,8 @@ import { users_router } from "./routes/users.routes.js"
 import { category_router } from "./routes/category.routes.js"
 import { item_router } from "./routes/items.routes.js"
 import { messages_router } from "./routes/messages.routes.js"
+import {favoriteItems_router} from "./routes/favoriteItems.routes.js"
+import {reviews_router} from "./routes/reviews.routes.js"
 
 //import { files_router } from "./routes/upload.routes.js";
 dotenv.config();
@@ -19,6 +21,8 @@ app.use("/users", users_router);
 app.use("/category", category_router);
 app.use("/items", item_router);
 app.use("/messages", messages_router);
+app.use("/favoriteItems", favoriteItems_router);
+app.use("/reviews", reviews_router);
 
 //app.use("/", files_router);
 
