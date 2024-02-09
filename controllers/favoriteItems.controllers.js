@@ -16,7 +16,7 @@ export const addToFavoriteItems = (req, res) => {
 };
   
 export const getAllMyFavoriteItems = (req, res) => {
-    const { favorite_collector_id } = req.body
+    const { favorite_collector_id } = req.params
     _getAllMyFavoriteItems(favorite_collector_id)
     .then((data) => {
         res.json(data);
@@ -27,7 +27,7 @@ export const getAllMyFavoriteItems = (req, res) => {
 };
   
 export const deleteFavoriteItems = (req, res) => {
-    const { favorite_items_id } = req.body
+    const { favorite_items_id } = req.params
     _deleteFavoriteItems(favorite_items_id)
     .then((data) => {
         res.status(204).json({ msg: "Deleted" })
