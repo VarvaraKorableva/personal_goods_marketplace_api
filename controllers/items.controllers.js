@@ -4,11 +4,12 @@ import {
     _getAllItemsByUserId,
     _getAllItemsByCityId,
     _deleteItem,
+    _getAllItems
   } from "../models/items.models.js"
   
   export const createItem = (req, res) => {
-      const { title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description } = req.body;
-      _createItem( title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description )
+      const { title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city, } = req.body;
+      _createItem( title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city )
         .then((data) => {
           res.json(data);
         })
@@ -18,7 +19,7 @@ import {
   };
   
   export const getAllItemsByCategoryId = (req, res) => {
-    const { category_id } = req.body;
+    const { category_id } = req.params;
     _getAllItemsByCategoryId(category_id)
         .then((data) => {
           res.json(data);
@@ -29,7 +30,8 @@ import {
   };
 
   export const getAllItemsByUserId = (req, res) => {
-    const { owner_id } = req.body;
+    const { owner_id } = req.params;
+    console.log(owner_id)
     _getAllItemsByUserId(owner_id)
         .then((data) => {
           res.json(data);
@@ -39,9 +41,8 @@ import {
         });
   };
 
-  export const getAllItemsByCityId = (req, res) => {
-    const { city_id } = req.body;
-    _getAllItemsByCityId(city_id)
+  export const getAllItems = (req, res) => {
+    _getAllItems()
         .then((data) => {
           res.json(data);
         })
@@ -49,12 +50,12 @@ import {
           res.status(404).json({ msg: "Not Found" });
         });
   };  
-  
+
   export const deleteItem = (req, res) => {
-      const { item_id } = req.body
+      const { item_id } = req.params
       _deleteItem(item_id)
         .then((data) => {
-          res.json(data).json({ msg: "Deleted" })
+          res.json({ msg: "Deleted" })
         })
         .catch((err) => {
           res.status(404).json({ msg: "Not Found" });

@@ -2,6 +2,8 @@ import {
   _createCategory,
   _deleteCategory,
   _getAllCategory,
+  _updateCategory,
+  _updateCategorySlug,
 } from "../models/category.models.js"
 
 export const createCategory = (req, res) => {
@@ -13,6 +15,28 @@ export const createCategory = (req, res) => {
       .catch((err) => {
         res.status(404).json({ msg: "Error, category not added, try again" });
       });
+};
+
+export const updateCategory = (req, res) => {
+  const { category_id, image_url } = req.body;
+  _updateCategory( category_id, image_url )
+    .then((data) => {
+      res.json({ msg: "Successfully updated" });
+    })
+    .catch((err) => {
+      res.status(404).json({ msg: "Error, category not updated, try again" });
+    });
+};
+
+export const updateCategorySlug = (req, res) => {
+  const { category_id, slug } = req.body;
+  _updateCategorySlug( category_id, slug )
+    .then((data) => {
+      res.json({ msg: "Successfully updated" });
+    })
+    .catch((err) => {
+      res.status(404).json({ msg: "Error, category not updated, try again" });
+    });
 };
 
 export const getAllCategory = (req, res) => {

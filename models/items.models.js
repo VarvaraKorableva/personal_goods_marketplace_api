@@ -1,6 +1,6 @@
 import { db } from "../config/pg.config.js"
 
-export const _createItem = async (title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description) => {
+export const _createItem = async (title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city) => {
   try {
     const result = await db("items").insert({
         title, 
@@ -10,7 +10,8 @@ export const _createItem = async (title, owner_id, category_id, city_id, price, 
         size, color, 
         condition, 
         year_of_manufacture, 
-        description
+        description,
+        city,
     }).returning("*");
     return result[0];
   }catch (error) {
@@ -29,7 +30,17 @@ export const _getAllItemsByCategoryId = async (category_id) => {
 //all my, (not all sellor)
 export const _getAllItemsByUserId = async (owner_id) => {
     try {
-        return db("items").select("*").where({ owner_id })
+        const result = await db("items").select("*").where({ owner_id })
+        return result
+    } catch (error) {
+        throw new Error(`error: ${error.message}`);
+    }
+};
+
+export const _getAllItems = async () => {
+    try {
+        const result = await db("items").select("*").orderBy("item_id", "desc")
+        .limit(40);
         return result
     } catch (error) {
         throw new Error(`error: ${error.message}`);
@@ -71,4 +82,7 @@ CREATE TABLE items (
 
 ALTER TABLE items
 ADD COLUMN description VARCHAR(500) NOT NULL;
+
+ALTER TABLE items
+ADD COLUMN city VARCHAR(25);
 */

@@ -7,8 +7,8 @@ import {
     getAllMyFavoriteItems,
 } from "../controllers/favoriteItems.controllers.js";
   
-favoriteItems_router.get('/', getAllMyFavoriteItems)
+favoriteItems_router.get('/:favorite_collector_id', getAllMyFavoriteItems)
 favoriteItems_router.post('/', addToFavoriteItems)
-favoriteItems_router.delete('/', deleteFavoriteItems)
+favoriteItems_router.delete('/:favorite_items_id', deleteFavoriteItems)
 
 export { favoriteItems_router}
