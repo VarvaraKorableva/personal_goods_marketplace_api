@@ -47,7 +47,7 @@ export const getAllUsers = (req, res) => {
 };
 
 export const getUser = async (req, res) => {
-    const { user_id } = req.body
+    const { user_id } = req.params
     try {
       const data = await _getUserById(user_id);
       if (data.length === 0) {

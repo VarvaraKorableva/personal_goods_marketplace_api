@@ -4,7 +4,8 @@ import {
     _getAllItemsByUserId,
     _getAllItemsByCityId,
     _deleteItem,
-    _getAllItems
+    _getAllItems,
+    _getItemById
   } from "../models/items.models.js"
   
   export const createItem = (req, res) => {
@@ -31,8 +32,19 @@ import {
 
   export const getAllItemsByUserId = (req, res) => {
     const { owner_id } = req.params;
-    console.log(owner_id)
     _getAllItemsByUserId(owner_id)
+        .then((data) => {
+          res.json(data);
+        })
+        .catch((err) => {
+          res.status(404).json({ msg: "Not Found" });
+        });
+  };
+
+  export const getItemById = (req, res) => {
+    const { item_id } = req.params;
+    console.log(item_id)
+    _getItemById (item_id)
         .then((data) => {
           res.json(data);
         })
