@@ -26,7 +26,7 @@ export const createUser = async (req, res) => {
       }
       return res
           .cookie('jwt', token, { httpOnly: true, sameSite: true })
-          .json(user);
+          .json({ token, user });
   } catch (err) {
       console.error("Error creating user:", err);
       return res.status(500).json({ msg: "Error, you are not registered, try again" });
@@ -47,7 +47,7 @@ export const getAllUsers = (req, res) => {
 };
 
 export const getUser = async (req, res) => {
-    const { user_id } = req.body
+    const { user_id } = req.params
     try {
       const data = await _getUserById(user_id);
       if (data.length === 0) {
@@ -78,7 +78,7 @@ export const loginUser = async (req, res) => {
         const token = jwt.sign({ user_id: user.user_id }, JWT_SECRET, { expiresIn: '7d' });
         return res
         .cookie('jwt', token, { httpOnly: true, sameSite: true })
-        .send({ user });
+        .json({ token, user });
       }
     } catch (error) {
       throw error;
