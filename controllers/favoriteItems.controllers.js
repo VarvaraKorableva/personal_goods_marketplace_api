@@ -30,7 +30,7 @@ export const deleteFavoriteItems = (req, res) => {
     const { favorite_items_id } = req.params
     _deleteFavoriteItems(favorite_items_id)
     .then((data) => {
-        res.status(204).json({ msg: "Deleted" })
+        res.json({ msg: "Deleted" })
     })
     .catch((err) => {
         res.status(404).json({ msg: "Not Found" });
