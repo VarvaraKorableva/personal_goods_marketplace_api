@@ -28,6 +28,7 @@ export const _deleteFavoriteItems = (favorite_items_id) => {
     return db("favorite_items").delete("*").where({ favorite_items_id })
 };
 
+
 /*CREATE TABLE favorite_items (
     favorite_items_id SERIAL PRIMARY KEY,
     favorite_collector_id INTEGER NOT NULL,
