@@ -43,7 +43,6 @@ import {
 
   export const getItemById = (req, res) => {
     const { item_id } = req.params;
-    console.log(item_id)
     _getItemById (item_id)
         .then((data) => {
           res.json(data);

@@ -28,7 +28,6 @@ export const _deleteCategory = (category_id) => {
 };
 
 export const _updateCategory = async (category_id, image_url) => {
-  console.log({image_url})
   try {
       const result = await db("category")
           .where({ category_id })

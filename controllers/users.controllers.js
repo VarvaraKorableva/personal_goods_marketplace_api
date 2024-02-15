@@ -73,8 +73,6 @@ export const loginUser = async (req, res) => {
         return res.status(401).json({ error: "Password or email is not correct" })
       } else {
         delete user[0].password
-        /*const token = jwt.sign({ email }, JWT_SECRET, { expiresIn: '1h' })
-        res.status(200).json({ token, user})*/
         const token = jwt.sign({ user_id: user.user_id }, JWT_SECRET, { expiresIn: '7d' });
         return res
         .cookie('jwt', token, { httpOnly: true, sameSite: true })
@@ -94,4 +92,13 @@ export const deleteUser = (req, res) => {
     .catch((err) => {
       res.status(404).json({ msg: "Not Found" });
     });
+};
+
+export const logoutUser = async (req, res) => {
+  try {
+    res.clearCookie('jwt');
+    return res.status(200).json({ message: "User logged out successfully" });
+  } catch (error) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
 };

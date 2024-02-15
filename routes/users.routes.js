@@ -6,10 +6,12 @@ import {
     getAllUsers,
     getUser,
     deleteUser,
+    logoutUser,
 } from "../controllers/users.controllers.js";
 
 users_router.post('/signup', createUser)
 users_router.post('/signin', loginUser)
+users_router.get('/logout', logoutUser)
   
 users_router.get('/', getAllUsers)
 users_router.get('/:user_id', getUser)

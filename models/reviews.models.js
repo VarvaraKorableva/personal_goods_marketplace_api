@@ -16,12 +16,10 @@ export const _createReview = async (author_review_id, seller_id, text_review, sc
 };
 //which I wrote
 export const _getAllMyReviews = async (author_review_id) => {
-    console.log('_getAllMyReviews =>', {author_review_id})
     try {
         const result = await db("reviews")
         .select("*")
         .where({author_review_id})
-        //.orderBy("timestamp", "asc");
         return result
     } catch (error) {
         throw new Error(`Error in _getAllMyReviews: ${error.message}`);
