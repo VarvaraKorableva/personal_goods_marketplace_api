@@ -24,8 +24,8 @@ export const _getAllMyFavoriteItems = async (favorite_collector_id) => {
     }
 };
   
-export const _deleteFavoriteItems = (favorite_items_id) => {
-    return db("favorite_items").delete("*").where({ favorite_items_id })
+export const _deleteFavoriteItems = (item_id) => {
+    return db("favorite_items").delete("*").where({ item_id })
 };
 
 

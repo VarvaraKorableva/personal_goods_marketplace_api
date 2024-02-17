@@ -27,8 +27,8 @@ export const getAllMyFavoriteItems = (req, res) => {
 };
   
 export const deleteFavoriteItems = (req, res) => {
-    const { favorite_items_id } = req.params
-    _deleteFavoriteItems(favorite_items_id)
+    const { item_id } = req.params
+    _deleteFavoriteItems(item_id)
     .then((data) => {
         res.json({ msg: "Deleted" })
     })

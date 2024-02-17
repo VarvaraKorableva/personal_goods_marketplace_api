@@ -9,6 +9,6 @@ import {
   
 favoriteItems_router.get('/:favorite_collector_id', getAllMyFavoriteItems)
 favoriteItems_router.post('/', addToFavoriteItems)
-favoriteItems_router.delete('/:favorite_items_id', deleteFavoriteItems)
+favoriteItems_router.delete('/:item_id', deleteFavoriteItems)
 
 export { favoriteItems_router}
