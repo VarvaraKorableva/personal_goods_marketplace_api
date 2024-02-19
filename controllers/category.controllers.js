@@ -1,3 +1,6 @@
+import dotenv from "dotenv";
+dotenv.config();
+
 import {
   _createCategory,
   _deleteCategory,
@@ -10,7 +13,7 @@ export const createCategory = (req, res) => {
     const { name, is_good, parent_id } = req.body;
     _createCategory( name, is_good, parent_id )
       .then((data) => {
-        res.json({ msg: "Successfully added" });
+        //res.json({ msg: "Successfully added" });
       })
       .catch((err) => {
         res.status(404).json({ msg: "Error, category not added, try again" });

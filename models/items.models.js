@@ -40,7 +40,7 @@ export const _getAllItemsByUserId = async (owner_id) => {
 export const _getAllItems = async () => {
     try {
         const result = await db("items").select("*").orderBy("item_id", "desc")
-        .limit(40);
+        //.limit(40);
         return result
     } catch (error) {
         throw new Error(`error: ${error.message}`);
@@ -88,10 +88,22 @@ CREATE TABLE items (
     FOREIGN KEY (city_id) REFERENCES cities(city_id) ON DELETE SET NULL
 );
 
-
 ALTER TABLE items
 ADD COLUMN description VARCHAR(500) NOT NULL;
 
 ALTER TABLE items
 ADD COLUMN city VARCHAR(25);
+
+
+create table uploads(
+ images_of_goods_id SERIAL PRIMARY KEY,
+ item_id INTEGER,
+ key varchar(255),
+ mimetype varchar(50),
+ location varchar(1000),
+ originalname varchar(1000),
+
+ FOREIGN KEY (item_id) REFERENCES items(item_id) ON DELETE CASCADE
+)
+
 */
