@@ -1,11 +1,14 @@
 import { db } from "../config/pg.config.js"
 
-export const _createCategory = async (name, is_good, parent_id) => {
+export const _createCategory = async (name, is_good, parent_id, image_url, slug) => {
   try {
     const result = await db("category").insert({
       name,
       is_good,
-      parent_id
+      parent_id,
+      image_url,
+      slug
+
     }).returning("*");
 
     return result[0];

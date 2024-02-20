@@ -9,7 +9,6 @@ export const _uploadSingle = async (req, res) => {
 
   try {
     const data = await uploadSingle(item_id, key, mimetype, location, originalname);
-    console.log(' =>', data)
     res.json(data)
   } catch (error) {
     res.status(500).json({ message: error.message });
