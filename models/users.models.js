@@ -3,22 +3,31 @@ import bcrypt from 'bcrypt'
 
 export const _createUser = async (username, email, password) => {
     try {
-      const hashedPassword = await bcrypt.hash(password, 10);
+      const existingUser = await db("users").where({ email }).first();
+        if (existingUser) {
+          throw new Error("Email is already registered");
+        } else {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const result = await db("users").insert({
+          username,
+          email,
+          password: hashedPassword
+        }).returning("*");
   
-      const result = await db("users").insert({
-        username,
-        email,
-        password: hashedPassword
-      }).returning("*");
-  
-      return result[0];
-    } catch (error) {
-      throw new Error(`Error creating user: ${error.message}`);
-    }
+        return result[0];
+      }} 
+      catch (error) {
+        throw new Error(`${error.message}`);
+      } 
 };
 
-export const _getUserByEmail = (email) => {
-  return db("users").select("*").where({ email })
+export const _getUserByEmail = async (email) => {
+  try {
+    const user = await db("users").select("*").where({ email }).first();
+    return user;
+  } catch (error) {
+    throw error;
+  }
 };
 
 export const _getUserById = (user_id) => {

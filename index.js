@@ -23,6 +23,8 @@ app.use(cors({
     'http://localhost:3000',
     'https://localhost:3001',
     'https://localhost:3000',
+    'https://localhost:3002',
+    'http://localhost:3002',
     'https://personal-goods-marketplace-client.onrender.com',
     'http://personal-goods-marketplace-client.onrender.com',
   ],

@@ -15,23 +15,49 @@ import {
 const {JWT_SECRET} = process.env;
 
 export const createUser = async (req, res) => {
-  const { username, email, password, phone } = req.body;
+  const { username, email, password } = req.body;
   try {
-      const data = await _createUser(username, email, password);
-      const token = jwt.sign({ email: data.email }, JWT_SECRET, { expiresIn: '7d' });
-      const user = {
-          user_id: data.user_id,
-          username: data.username,
-          email: data.email
-      }
-      return res
-          .cookie('jwt', token, { httpOnly: true, sameSite: true })
-          .json({ token, user });
+    const data = await _createUser(username, email, password);
+    const token = jwt.sign({ email: data.email }, JWT_SECRET, { expiresIn: '7d' });
+    const user = {
+      user_id: data.user_id,
+      username: data.username,
+      email: data.email
+    };
+    return res
+      .cookie('jwt', token, { httpOnly: true, sameSite: true })
+      .json({ token, user });
   } catch (err) {
-      console.error("Error creating user:", err);
-      return res.status(500).json({ msg: "Error, you are not registered, try again" });
+    console.error("Error creating user:", err);
+    if (err.message === "Email is already registered") {
+      return res.status(400).json({ msg: "Email is already registered" });
+    }
+    return res.status(500).json({ msg: "Error, you are not registered, try again" });
   }
 };
+
+/*
+export const _createUser = async (username, email, password) => {
+  try {
+    // Проверяем, существует ли пользователь с такой же почтой
+    const existingUser = await db("users").where({ email }).first();
+    if (existingUser) {
+      throw new Error("Email is already registered");
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const result = await db("users").insert({
+      username,
+      email,
+      password: hashedPassword
+    }).returning("*");
+
+    return result[0];
+  } catch (error) {
+    throw new Error(`Error creating user: ${error.message}`);
+  }
+};*/
 
 export const getAllUsers = (req, res) => {
     _getAllUsers()
@@ -61,28 +87,6 @@ export const getUser = async (req, res) => {
     }
 }; 
 
-export const loginUser = async (req, res) => {
-    const { email, password } = req.body
-    try {
-      const user = await _getUserByEmail(email);
-      if (!user) {
-        return res.status(404).json({ error: "User not found" })
-      }
-      const passwordMatch = await bcrypt.compare(password, user[0].password);
-      if (!passwordMatch) {
-        return res.status(401).json({ error: "Password or email is not correct" })
-      } else {
-        delete user[0].password
-        const token = jwt.sign({ user_id: user.user_id }, JWT_SECRET, { expiresIn: '7d' });
-        return res
-        .cookie('jwt', token, { httpOnly: true, sameSite: true })
-        .json({ token, user });
-      }
-    } catch (error) {
-      throw error;
-    }
-  };
-  
 export const deleteUser = (req, res) => {
   const user_id = req.body
   _deleteUser(user_id.user_id)
@@ -100,5 +104,33 @@ export const logoutUser = async (req, res) => {
     return res.status(200).json({ message: "User logged out successfully" });
   } catch (error) {
     return res.status(500).json({ error: "Internal server error" });
+  }
+};
+
+export const loginUser = async (req, res) => {
+  const { email, password } = req.body;
+  
+  try {
+    const user = await _getUserByEmail(email);
+
+    if (!user) {
+      return res.status(401).json({ error: "Authentication failed" });
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    
+    if (!passwordMatch) {
+      return res.status(401).json({ error: "Authentication failed" });
+    }
+    delete user.password;
+    const token = jwt.sign({ user_id: user.user_id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+
+    return res
+      .cookie('jwt', token, { httpOnly: true, sameSite: true })
+      .json({ token, user });
+
+  } catch (error) {
+    console.error("Login failed:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
