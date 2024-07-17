@@ -20,6 +20,7 @@ export const _createItem = async (title, owner_id, category_id, city_id, price, 
 };
 
 export const _getAllItemsByCategoryId = async (category_id) => {
+    //console.log("if parent_id == null- category_id",category_id)
     try {
         const result = await db("items").select("*").where({ category_id }).orderBy("category_id")
         return result
@@ -68,6 +69,24 @@ export const _getItemById = async (item_id) => {
         throw new Error(`error: ${error.message}`);
     }
 };
+
+export const _getItemsBySubCategoriesByParentId = async (parent_id) => {
+    //console.log("parent_id", parent_id)
+    try {
+
+      const categories = await db("category").select("*").where({ parent_id});
+  
+      const category_id = categories.map(category => category.category_id);
+  
+      const items = await db("items").select("*").whereIn("category_id", category_id);
+
+      return items;
+  
+    } catch (error) {
+      throw new Error(`Error in category.models: ${error.message}`);
+    }
+  };
+  
 
 /*
 CREATE TABLE items (

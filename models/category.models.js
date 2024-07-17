@@ -56,6 +56,19 @@ export const _updateCategorySlug = async (category_id, slug) => {
   }
 };
 
+export const _updateCategoryParentId = async (category_id, parent_id) => {
+  try {
+      const result = await db("category")
+          .where({ category_id })
+          .update({parent_id})
+          .returning("*");
+
+      return result[0];
+  } catch (error) {
+      throw new Error(`Error updating category: ${error.message}`);
+  }
+};
+
 /*
 CREATE TABLE category (
     category_id SERIAL PRIMARY KEY,

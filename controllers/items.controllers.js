@@ -5,7 +5,8 @@ import {
     _getAllItemsByCityId,
     _deleteItem,
     _getAllItems,
-    _getItemById
+    _getItemById,
+    _getItemsBySubCategoriesByParentId,
   } from "../models/items.models.js"
   
   export const createItem = (req, res) => {
@@ -67,6 +68,18 @@ import {
       _deleteItem(item_id)
         .then((data) => {
           res.json({ msg: "Deleted" })
+        })
+        .catch((err) => {
+          res.status(404).json({ msg: "Not Found" });
+        });
+  };
+
+
+  export const getItemsBySubCategoriesByParentId = (req, res) => {
+    const { parent_id } = req.params;
+    _getItemsBySubCategoriesByParentId(parent_id)
+        .then((data) => {
+          res.json(data);
         })
         .catch((err) => {
           res.status(404).json({ msg: "Not Found" });

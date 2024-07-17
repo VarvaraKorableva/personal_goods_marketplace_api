@@ -7,6 +7,7 @@ import {
   _getAllCategory,
   _updateCategory,
   _updateCategorySlug,
+  _updateCategoryParentId,
 } from "../models/category.models.js"
 
 export const createCategory = (req, res) => {
@@ -61,4 +62,15 @@ export const deleteCategory = (req, res) => {
       .catch((err) => {
         res.status(404).json({ msg: "Not Found" });
       });
+};
+
+export const updateCategoryParentId = (req, res) => {
+  const { category_id, parent_id } = req.body;
+  _updateCategoryParentId( category_id, parent_id )
+    .then((data) => {
+      res.json({ msg: "Successfully updated" });
+    })
+    .catch((err) => {
+      res.status(404).json({ msg: "Error, category not updated, try again" });
+    });
 };
