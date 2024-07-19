@@ -70,16 +70,17 @@ export const _getItemById = async (item_id) => {
     }
 };
 
-export const _getItemsBySubCategoriesByParentId = async (parent_id) => {
-    //console.log("parent_id", parent_id)
+export const _getItemsBySubCategoriesByParentId = async (parent_id) => { /////category_id
+    
     try {
 
-      const categories = await db("category").select("*").where({ parent_id});
-  
+      const categories = await db("category").select("*").where({ parent_id });
+      
       const category_id = categories.map(category => category.category_id);
-  
+      category_id.push(Number(parent_id))
+      
       const items = await db("items").select("*").whereIn("category_id", category_id);
-
+      
       return items;
   
     } catch (error) {
