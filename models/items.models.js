@@ -20,7 +20,6 @@ export const _createItem = async (title, owner_id, category_id, city_id, price, 
 };
 
 export const _getAllItemsByCategoryId = async (category_id) => {
-    //console.log("if parent_id == null- category_id",category_id)
     try {
         const result = await db("items").select("*").where({ category_id }).orderBy("category_id")
         return result

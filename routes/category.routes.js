@@ -7,13 +7,14 @@ import {
     deleteCategory,
     updateCategory,
     updateCategorySlug,
+    updateCategoryParentId,
 } from "../controllers/category.controllers.js";
   
 category_router.get('/', getAllCategory)
 category_router.post('/', createCategory)
 category_router.delete('/', deleteCategory)
 
-category_router.patch('/', updateCategory)
+category_router.patch('/', updateCategoryParentId)
 
 
 export { category_router }

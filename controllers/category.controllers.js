@@ -11,8 +11,8 @@ import {
 } from "../models/category.models.js"
 
 export const createCategory = (req, res) => {
-    const { name, is_good, parent_id, image_url, slug } = req.body;
-    _createCategory( name, is_good, parent_id, image_url, slug )
+    const { name, is_good, parent_id, image_url, slug, name_rus } = req.body;
+    _createCategory( name, is_good, parent_id, image_url, slug, name_rus )
       .then((data) => {
         res.json({ msg: "Successfully added" });
       })
@@ -74,3 +74,4 @@ export const updateCategoryParentId = (req, res) => {
       res.status(404).json({ msg: "Error, category not updated, try again" });
     });
 };
+
