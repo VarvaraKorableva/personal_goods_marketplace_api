@@ -82,25 +82,17 @@ export const _getItemById = async (item_id) => {
 export const _getItemsBySubCategoriesByParentId = async (parent_id) => { /////category_id
     
     try {
-      console.log('parent_id', parent_id)
-
       const categories = await db("category").select("*").where({ parent_id });
-      console.log('categories', categories)
       const categoryId = categories.map(category => category.category_id);
       categoryId.push(Number(parent_id))
-      console.log('categoryId', categoryId)
       
-      const items = await db("items").select("*").whereIn("category_id", categoryId);
-      console.log('items', items)
+      //const items = await db("items").select("*").whereIn("category_id", categoryId);
 
-      //получить категории в которых перент айди это категори айди (categoryId)
       const categories2 = await db("category").select("*").whereIn("parent_id", categoryId);
       const categoryId2 = categories2.map(category => category.category_id);
-      //
-      //console.log('categories2', categories2)
-      console.log('categoryId2', categoryId2)
-      const items2 = await db("items").select("*").whereIn("category_id", categoryId2);
-      return items2;
+
+      const items = await db("items").select("*").whereIn("category_id", categoryId2);
+      return items;
   
     } catch (error) {
       throw new Error(`Error in category.models: ${error.message}`);
