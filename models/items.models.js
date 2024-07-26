@@ -26,6 +26,7 @@ export const _getAllItemsByCategoryId = async (category_id) => {
         
         const categoryId = categories.map(category => category.category_id);
         categoryId.push(Number(category_id))
+        console.log(categoryId)
         
         const items = await db("items").select("*").whereIn("category_id", categoryId)
         
@@ -34,13 +35,8 @@ export const _getAllItemsByCategoryId = async (category_id) => {
       } catch (error) {
         throw new Error(`Error in category.models: ${error.message}`);
       }
-    /*try {
-        const result = await db("items").select("*").where({ category_id }).orderBy("category_id")
-        return result
-    } catch (error) {
-        throw new Error(`error in category.models: ${error.message}`);
-    }*/
 };
+
 //all my, (not all sellor)
 export const _getAllItemsByUserId = async (owner_id) => {
     try {
@@ -86,14 +82,16 @@ export const _getItemById = async (item_id) => {
 export const _getItemsBySubCategoriesByParentId = async (parent_id) => { /////category_id
     
     try {
-
       const categories = await db("category").select("*").where({ parent_id });
+      const categoryId = categories.map(category => category.category_id);
+      categoryId.push(Number(parent_id))
       
-      const category_id = categories.map(category => category.category_id);
-      category_id.push(Number(parent_id))
-      
-      const items = await db("items").select("*").whereIn("category_id", category_id);
-      
+      //const items = await db("items").select("*").whereIn("category_id", categoryId);
+
+      const categories2 = await db("category").select("*").whereIn("parent_id", categoryId);
+      const categoryId2 = categories2.map(category => category.category_id);
+
+      const items = await db("items").select("*").whereIn("category_id", categoryId2);
       return items;
   
     } catch (error) {
