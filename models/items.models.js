@@ -21,11 +21,25 @@ export const _createItem = async (title, owner_id, category_id, city_id, price, 
 
 export const _getAllItemsByCategoryId = async (category_id) => {
     try {
+        
+        const categories = await db("category").select("*").where({ parent_id: category_id });
+        
+        const categoryId = categories.map(category => category.category_id);
+        categoryId.push(Number(category_id))
+        
+        const items = await db("items").select("*").whereIn("category_id", categoryId)
+        
+        return items;
+    
+      } catch (error) {
+        throw new Error(`Error in category.models: ${error.message}`);
+      }
+    /*try {
         const result = await db("items").select("*").where({ category_id }).orderBy("category_id")
         return result
     } catch (error) {
         throw new Error(`error in category.models: ${error.message}`);
-    }
+    }*/
 };
 //all my, (not all sellor)
 export const _getAllItemsByUserId = async (owner_id) => {
