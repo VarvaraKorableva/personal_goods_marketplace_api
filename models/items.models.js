@@ -26,7 +26,6 @@ export const _getAllItemsByCategoryId = async (category_id) => {
         
         const categoryId = categories.map(category => category.category_id);
         categoryId.push(Number(category_id))
-        console.log(categoryId)
         
         const items = await db("items").select("*").whereIn("category_id", categoryId)
         

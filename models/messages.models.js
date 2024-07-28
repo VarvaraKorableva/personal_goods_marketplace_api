@@ -14,8 +14,22 @@ export const _createMessages = async (sender_id, receiver_id, message_text, item
     throw new Error(`Error creating user: ${error.message}`);
   }
 };
+//get all messages with one user about one item - getAllMessagesWithOneUserAboutOneItem getOneConversation
+export const _getOneConversation = async (receiver_id, sender_id, item_id) => {
+  try {
+      const result = await db("messages")
+      .select("*")
+      .where({ receiver_id, sender_id, item_id })
+      .orWhere({ receiver_id: sender_id, sender_id: receiver_id, item_id: item_id })
+      .orderBy("timestamp", "asc");
 
-export const _getAllUserMessages = async (receiver_id, sender_id) => {
+      return result
+  } catch (error) {
+      throw new Error(`Error in messages.models: ${error.message}`);
+  }
+};
+//get last message from every conversation
+export const _getLastMessageFromEveryConversation = async (receiver_id, sender_id) => {
     try {
         const result = await db("messages")
         .select("*")

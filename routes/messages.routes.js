@@ -3,11 +3,13 @@ import express from "express";
 const messages_router = express.Router();
 import {
     createMessages,
-    getAllUserMessages,
+    getLastMessageFromEveryConversation,
     deleteMessage,
+    getOneConversation,
 } from "../controllers/messages.controllers.js";
   
-messages_router.get('/', getAllUserMessages)
+messages_router.get('/getLastMessageFromEveryConversation/:receiver_id/:sender_id', getLastMessageFromEveryConversation)
+messages_router.get('/getOneConversation/:receiver_id/:sender_id/:item_id', getOneConversation)
 messages_router.post('/', createMessages)
 messages_router.delete('/', deleteMessage)
 
