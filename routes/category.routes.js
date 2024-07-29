@@ -15,6 +15,6 @@ category_router.post('/', createCategory)
 category_router.delete('/', deleteCategory)
 
 category_router.patch('/', updateCategoryParentId)
-
+category_router.patch('/img', updateCategory)
 
 export { category_router }

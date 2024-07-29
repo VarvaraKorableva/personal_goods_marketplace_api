@@ -26,7 +26,6 @@ export const _getAllItemsByCategoryId = async (category_id) => {
         
         const categoryId = categories.map(category => category.category_id);
         categoryId.push(Number(category_id))
-        console.log(categoryId)
         
         const items = await db("items").select("*").whereIn("category_id", categoryId)
         
@@ -90,6 +89,7 @@ export const _getItemsBySubCategoriesByParentId = async (parent_id) => { /////ca
 
       const categories2 = await db("category").select("*").whereIn("parent_id", categoryId);
       const categoryId2 = categories2.map(category => category.category_id);
+      categoryId2.push(Number(parent_id))
 
       const items = await db("items").select("*").whereIn("category_id", categoryId2);
       return items;

@@ -1,7 +1,8 @@
 import {
     _createMessages,
-    _getAllUserMessages,
+    _getLastMessageFromEveryConversation,
     _deleteMessage,
+    _getOneConversation,
   } from "../models/messages.models.js"
   
   export const createMessages = (req, res) => {
@@ -14,10 +15,21 @@ import {
           res.status(404).json({ msg: "Error, message didn't send, try again" });
         });
   };
+
+  export const getOneConversation = (req, res) => {
+    const { receiver_id, sender_id, item_id } = req.params
+    _getOneConversation(receiver_id, sender_id, item_id)
+        .then((data) => {
+          res.json(data);
+        })
+        .catch((err) => {
+          res.status(404).json({ msg: "Not Found" });
+        });
+  };
   
-  export const getAllUserMessages = (req, res) => {
-    const { receiver_id, sender_id } = req.body
-      _getAllUserMessages(receiver_id, sender_id)
+  export const getLastMessageFromEveryConversation = (req, res) => {
+    const { receiver_id, sender_id } = req.params
+      _getLastMessageFromEveryConversation(receiver_id, sender_id)
         .then((data) => {
           res.json(data);
         })
