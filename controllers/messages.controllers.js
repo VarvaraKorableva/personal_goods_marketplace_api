@@ -6,8 +6,8 @@ import {
   } from "../models/messages.models.js"
   
   export const createMessages = (req, res) => {
-      const { sender_id, receiver_id, message_text, item_id } = req.body;
-      _createMessages( sender_id, receiver_id, message_text, item_id )
+      const { sender_id, receiver_id, message_text, item_id, conversation_id } = req.body;
+      _createMessages( sender_id, receiver_id, message_text, item_id, conversation_id )
         .then((data) => {
           res.json({ msg: "Successfully added" });
         })

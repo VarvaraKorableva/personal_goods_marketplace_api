@@ -1,12 +1,13 @@
 import { db } from "../config/pg.config.js"
 
-export const _createMessages = async (sender_id, receiver_id, message_text, item_id) => {
+export const _createMessages = async (sender_id, receiver_id, message_text, item_id, conversation_id) => {
   try {
     const result = await db("messages").insert({
         sender_id,
         receiver_id,
         message_text,
-        item_id
+        item_id,
+        conversation_id,
     }).returning("*");
 
     return result[0];
@@ -29,12 +30,12 @@ export const _getOneConversation = async (receiver_id, sender_id, item_id) => {
   }
 };
 //get last message from every conversation
-export const _getLastMessageFromEveryConversation = async (receiver_id, sender_id) => {
+export const _getLastMessageFromEveryConversation = async (user_id) => {
     try {
         const result = await db("messages")
         .select("*")
-        .where({ receiver_id, sender_id })
-        .orWhere({ receiver_id: sender_id, sender_id: receiver_id })
+        .where({ receiver_id : user_id })
+        .orWhere({ sender_id: user_id })
         .orderBy("timestamp", "asc");
 
         return result
@@ -42,7 +43,7 @@ export const _getLastMessageFromEveryConversation = async (receiver_id, sender_i
         throw new Error(`Error in messages.models: ${error.message}`);
     }
 };
-  
+  //delete only my messages
 export const _deleteMessage = (message_id) => {
     return db("messages").delete("*").where({ message_id })
 };
@@ -60,4 +61,7 @@ export const _deleteMessage = (message_id) => {
 
 ALTER TABLE messages
 ADD COLUMN item_id INTEGER NOT NULL REFERENCES items(item_id) ON DELETE CASCADE;
+
+ALTER TABLE messages
+ADD COLUMN read BOOLEAN DEFAULT FALSE;
 */
