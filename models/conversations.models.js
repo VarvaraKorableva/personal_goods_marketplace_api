@@ -1,6 +1,7 @@
 import { db } from "../config/pg.config.js"
 
 export const _createConversation = async (sender_id, receiver_id, item_id) => {
+
     try {
       const existingConversations = await db("conversations")
         .select("*")
@@ -24,7 +25,7 @@ export const _createConversation = async (sender_id, receiver_id, item_id) => {
     } catch (error) {
        throw new Error(`Error creating conversation: ${error.message}`);
     }
-  };  
+};  
 
   export const _getAllUserConversations = async (user_id) => {
       try {
@@ -32,7 +33,7 @@ export const _createConversation = async (sender_id, receiver_id, item_id) => {
           .select("*")
           .where({receiver_id: user_id })
           .orWhere({ sender_id: user_id})
-          console.log(userConversations)
+          
           return userConversations
       } catch (error) {
         throw new Error(`Error creating conversation: ${error.message}`);

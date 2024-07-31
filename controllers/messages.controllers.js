@@ -1,13 +1,14 @@
 import {
     _createMessages,
     _getLastMessageFromEveryConversation,
+    
     _deleteMessage,
     _getOneConversation,
   } from "../models/messages.models.js"
   
   export const createMessages = (req, res) => {
-      const { sender_id, receiver_id, message_text, item_id, conversation_id } = req.body;
-      _createMessages( sender_id, receiver_id, message_text, item_id, conversation_id )
+      const { sender_id, receiver_id, message_text, item_id } = req.body;
+      _createMessages( sender_id, receiver_id, message_text, item_id )
         .then((data) => {
           res.json({ msg: "Successfully added" });
         })
@@ -28,8 +29,8 @@ import {
   };
   
   export const getLastMessageFromEveryConversation = (req, res) => {
-    const { receiver_id, sender_id } = req.params
-      _getLastMessageFromEveryConversation(receiver_id, sender_id)
+    const { user_id } = req.params
+      _getLastMessageFromEveryConversation(user_id)
         .then((data) => {
           res.json(data);
         })

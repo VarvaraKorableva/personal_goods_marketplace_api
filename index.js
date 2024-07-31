@@ -8,7 +8,7 @@ import { messages_router } from "./routes/messages.routes.js"
 import {favoriteItems_router} from "./routes/favoriteItems.routes.js"
 import {reviews_router} from "./routes/reviews.routes.js"
 import { files_router } from "./routes/upload.routes.js"
-import { conversations_router } from "./routes/conversations.routes.js"
+//import { conversations_router } from "./routes/conversations.routes.js"
 
 dotenv.config();
 
@@ -38,7 +38,7 @@ app.use("/messages", messages_router);
 app.use("/favoriteItems", favoriteItems_router);
 app.use("/reviews", reviews_router);
 app.use("/files", files_router); //images
-app.use("/conversation", conversations_router); 
+//app.use("/conversation", conversations_router); 
 
 app.listen(process.env.PORT || 8080, () => {
   console.log(`run on ${process.env.PORT || 8080}`);

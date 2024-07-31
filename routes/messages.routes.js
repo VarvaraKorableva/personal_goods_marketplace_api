@@ -8,7 +8,7 @@ import {
     getOneConversation,
 } from "../controllers/messages.controllers.js";
   
-messages_router.get('/getLastMessageFromEveryConversation/:receiver_id/:sender_id', getLastMessageFromEveryConversation)
+messages_router.get('/getLastMessageFromEveryConversation/:user_id', getLastMessageFromEveryConversation)
 messages_router.get('/getOneConversation/:receiver_id/:sender_id/:item_id', getOneConversation)
 //messages_router.get('/getOneConversation/:conversation_id', getOneConversation)
 

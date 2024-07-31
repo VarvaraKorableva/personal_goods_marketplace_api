@@ -13,7 +13,7 @@ export const createConversation = (req, res) => {
         res.json({ msg: "Successfully added" });
       })
       .catch((err) => {
-        res.status(404).json({ msg: "Error, message didn't send, try again" });
+        res.status(404).json({ msg: "Error, conversation didn't created, try again" });
       });
 };
 
