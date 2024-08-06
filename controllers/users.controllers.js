@@ -9,7 +9,10 @@ import {
   _getAllUsers,
   _getUserByEmail,
   _deleteUser,
-  _getUserById
+  _getUserById,
+  _adCountIncrement,
+  _adCountDecrement,
+
 } from "../models/users.models.js"
 
 const {JWT_SECRET} = process.env;
@@ -35,29 +38,6 @@ export const createUser = async (req, res) => {
     return res.status(500).json({ msg: "Error, you are not registered, try again" });
   }
 };
-
-/*
-export const _createUser = async (username, email, password) => {
-  try {
-    // Проверяем, существует ли пользователь с такой же почтой
-    const existingUser = await db("users").where({ email }).first();
-    if (existingUser) {
-      throw new Error("Email is already registered");
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const result = await db("users").insert({
-      username,
-      email,
-      password: hashedPassword
-    }).returning("*");
-
-    return result[0];
-  } catch (error) {
-    throw new Error(`Error creating user: ${error.message}`);
-  }
-};*/
 
 export const getAllUsers = (req, res) => {
     _getAllUsers()
@@ -133,4 +113,29 @@ export const loginUser = async (req, res) => {
     console.error("Login failed:", error);
     return res.status(500).json({ error: "Internal Server Error" });
   }
+};
+
+export const adCountIncrement = (req, res) => {
+  const { user_id } = req.params
+  
+  _adCountIncrement(user_id)
+      .then((data) => {
+        res.json(data);
+      })
+      .catch((err) => {
+        res.status(404).json({ msg: "Not Found" });
+      });
+};
+
+
+export const adCountDecrement = (req, res) => {
+  const { user_id } = req.params
+  
+  _adCountDecrement(user_id)
+      .then((data) => {
+        res.json(data);
+      })
+      .catch((err) => {
+        res.status(404).json({ msg: "Not Found" });
+      });
 };

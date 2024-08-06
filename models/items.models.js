@@ -120,7 +120,7 @@ CREATE TABLE items (
 );
 
 ALTER TABLE items
-ADD COLUMN description VARCHAR(500) NOT NULL;
+ADD COLUMN description VARCHAR(500) NOT NULL;     ///now it is 900 after 5.08.2024
 
 ALTER TABLE items
 ADD COLUMN city VARCHAR(25);
@@ -137,4 +137,7 @@ create table uploads(
  FOREIGN KEY (item_id) REFERENCES items(item_id) ON DELETE CASCADE
 )
 
+
+ALTER TABLE items
+ALTER COLUMN description TYPE VARCHAR(900);
 */
