@@ -44,15 +44,15 @@ export const _deleteUser = (user_id) => {
 
 export const _adCountIncrement = async (user_id) => {
   try {
-      console.log(`Incrementing ad_count for user_id: ${user_id}`);
       const result = await db("users")
         .where({ user_id })
-        .increment("ad_count", 1);
-      console.log(`Increment result:`, result);
-      // Вы можете также сделать запрос для проверки нового значения ad_count
-      const updatedUser = await db("users").where({ user_id }).first();
-      console.log(`Updated ad_count: ${updatedUser.ad_count}`);
-      return result;
+        .increment("ad_count", 1)
+
+      const updatedUser = await db("users")
+      .where({ user_id })
+      .first();
+      return updatedUser.ad_count;
+
   } catch (error) {
       console.error(`Error in messages.models: ${error.message}`);
       throw new Error(`Error in messages.models: ${error.message}`);
@@ -61,12 +61,16 @@ export const _adCountIncrement = async (user_id) => {
 
 export const _adCountDecrement = async (user_id) => {
   try {
-    // Выполняем декремент значения ad_count, уменьшая его на 1
     const result = await db("users")
       .where({ user_id })
       .decrement("ad_count", 1);
+    
+    const updatedUser = await db("users")
+      .where({ user_id })
+      .first();
 
-    return result;
+    return updatedUser.ad_count; 
+     
   } catch (error) {
     throw new Error(`Error in messages.models: ${error.message}`);
   }

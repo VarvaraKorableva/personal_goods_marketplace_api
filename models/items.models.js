@@ -140,4 +140,7 @@ create table uploads(
 
 ALTER TABLE items
 ALTER COLUMN description TYPE VARCHAR(900);
+
+ALTER TABLE items
+ADD COLUMN reserved BOOLEAN DEFAULT FALSE;
 */
