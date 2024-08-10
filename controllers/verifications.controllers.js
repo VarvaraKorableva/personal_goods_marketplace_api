@@ -1,32 +1,34 @@
 import nodemailer from'nodemailer'
 import { _saveVerificationCode, _getVerificationCode } from '../models/verifications.models.js'
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export const sendVerificationCode = async (req, res) => {
   const { email } = req.body;
   const verificationCode = Math.floor(100000 + Math.random() * 900000).toString();
-
   try {
     await _saveVerificationCode(email, verificationCode);
-
     const transporter = nodemailer.createTransport({
-      service: 'Gmail',
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
-      },
+      }
     });
 
-    const mailOptions = {
+    let info = await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
       subject: 'Your Verification Code',
       text: `Your verification code is: ${verificationCode}`,
-    };
-
-    await transporter.sendMail(mailOptions);
+    });
 
     res.status(200).send('Verification code sent.');
   } catch (error) {
+    console.error('Error:', error);
     res.status(500).send('Error sending verification code.');
   }
 };
