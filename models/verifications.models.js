@@ -16,9 +16,14 @@ export const _saveVerificationCode = async (email, code) => {
   };
   
   export  const _getVerificationCode = async (email, code) => {
-    const [verification] = await db('email_verifications')
+    try {
+      const verification = await db('email_verifications')
+      .select("*")
       .where({ email, verification_code: code })
       .andWhere('expires_at', '>', new Date())
-      .select('*');
-    return verification;
-  };
+      
+      return verification
+    } catch (error) {
+      throw error
+    }
+  }

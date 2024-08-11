@@ -25,8 +25,7 @@ export const sendVerificationCode = async (req, res) => {
       subject: 'Your Verification Code',
       text: `Your verification code is: ${verificationCode}`,
     });
-
-    res.status(200).send('Verification code sent.');
+    res.status(200).json({ msg: 'Verification code sent.' })
   } catch (error) {
     console.error('Error:', error);
     res.status(500).send('Error sending verification code.');
@@ -35,16 +34,14 @@ export const sendVerificationCode = async (req, res) => {
 
 export const verifyCode = async (req, res) => {
   const { email, code } = req.body;
-
   try {
     const verification = await _getVerificationCode(email, code);
-
     if (verification) {
-      res.status(200).send('Code verified. You can now complete registration.');
+      res.json({ msg: "Code verified. You can now complete registration." })
     } else {
-      res.status(400).send('Invalid or expired verification code.');
+      res.json({ msg: "Invalid or expired verification code." })
     }
   } catch (error) {
-    res.status(500).send('Error verifying code.');
+    res.json({ msg: "Error verifying code." })
   }
 };
