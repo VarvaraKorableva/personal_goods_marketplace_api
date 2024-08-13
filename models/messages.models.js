@@ -1,12 +1,13 @@
 import { db } from "../config/pg.config.js"
 
-export const _createMessages = async (sender_id, receiver_id, message_text, item_id) => {
+export const _createMessages = async (sender_id, receiver_id, message_text, item_id, conversation_id) => {
   try {
     const result = await db("messages").insert({
         sender_id,
         receiver_id,
         message_text,
         item_id,
+        conversation_id,
     }).returning("*");
 
     return result[0];

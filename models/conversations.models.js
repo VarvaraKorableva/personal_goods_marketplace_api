@@ -2,22 +2,12 @@ import { db } from "../config/pg.config.js"
 //conversation_owner_id -  who started conversation
 export const _createConversation = async (conversation_owner_id, item_owner_id, item_id) => {
     try {
-      const existingConversations = await db("conversations")
-        .select("*")
-        .where({ conversation_owner_id, item_owner_id, item_id })
-  
-      if (existingConversations.length > 0) {
-        return existingConversations[0];
-      } else {
-
-        const newConversation = await db("conversations")
-          .insert({
-            conversation_owner_id, item_owner_id, item_id
-          })
-          .returning("*");
-        
-        return newConversation[0];
-      }
+      const newConversation = await db("conversations")
+      .insert({
+        conversation_owner_id, item_owner_id, item_id
+      })
+      .returning("*");
+      return newConversation[0];
     } catch (error) {
        throw new Error(`Error creating conversation: ${error.message}`);
     }

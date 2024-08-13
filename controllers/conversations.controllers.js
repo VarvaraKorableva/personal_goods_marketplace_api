@@ -9,8 +9,8 @@ export const createConversation = (req, res) => {
     const { conversation_owner_id, item_owner_id, item_id } = req.body;
     
     _createConversation( conversation_owner_id, item_owner_id, item_id )
-      .then((res) => {
-        res.json({ msg: "Successfully added" });
+      .then((data) => {
+        res.json(data);
       })
       .catch((err) => {
         res.status(404).json({ msg: "Error, conversation didn't created, try again" });
