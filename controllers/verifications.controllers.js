@@ -27,7 +27,7 @@ export const sendVerificationCode = async (req, res) => {
     });
     res.status(200).json({ msg: 'Verification code sent.' })
   } catch (error) {
-    console.error('Error:', error);
+    console.log(error)
     res.status(500).send('Error sending verification code.');
   }
 };

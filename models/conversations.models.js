@@ -1,12 +1,10 @@
 import { db } from "../config/pg.config.js"
-
-export const _createConversation = async (sender_id, receiver_id, item_id) => {
-
+//conversation_owner_id -  who started conversation
+export const _createConversation = async (conversation_owner_id, item_owner_id, item_id) => {
     try {
       const existingConversations = await db("conversations")
         .select("*")
-        .where({ receiver_id, sender_id, item_id })
-        .orWhere({ receiver_id: sender_id, sender_id: receiver_id, item_id });
+        .where({ conversation_owner_id, item_owner_id, item_id })
   
       if (existingConversations.length > 0) {
         return existingConversations[0];
@@ -14,9 +12,7 @@ export const _createConversation = async (sender_id, receiver_id, item_id) => {
 
         const newConversation = await db("conversations")
           .insert({
-            sender_id,
-            receiver_id,
-            item_id
+            conversation_owner_id, item_owner_id, item_id
           })
           .returning("*");
         
@@ -31,8 +27,8 @@ export const _createConversation = async (sender_id, receiver_id, item_id) => {
       try {
           const userConversations = await db('conversations')
           .select("*")
-          .where({receiver_id: user_id })
-          .orWhere({ sender_id: user_id})
+          .where({ conversation_owner_id: user_id })
+          .orWhere({ item_owner_id: user_id})
           
           return userConversations
       } catch (error) {
@@ -40,7 +36,7 @@ export const _createConversation = async (sender_id, receiver_id, item_id) => {
       }  
 
   }
-
+/*
 //если один удалил то другому придет сообщение, что юзер удалил конверсейшен и если он отправить сообщение, то юзер его не увидит
   export const _deleteConversationById = async (conversation_id, user_id) => {
     try {
@@ -94,25 +90,21 @@ export const _createConversation = async (sender_id, receiver_id, item_id) => {
       throw new Error(`Error deleting conversation: ${error.message}`);
     }
   };
-
+*/
 /*
 CREATE TABLE conversations (
     conversation_id SERIAL PRIMARY KEY,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    sender_id INTEGER NOT NULL,
-    receiver_id INTEGER NOT NULL,
+    conversation_owner_id INTEGER NOT NULL,
+    item_owner_id INTEGER NOT NULL,
     item_id INTEGER,
-    FOREIGN KEY (sender_id) REFERENCES users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (receiver_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    is_deleted_by_sender BOOLEAN DEFAULT FALSE,
+    is_deleted_by_receiver BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (conversation_owner_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (item_owner_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (item_id) REFERENCES items(item_id) ON DELETE CASCADE
 );
 
-
-ALTER TABLE conversations
-ADD COLUMN is_deleted_by_sender BOOLEAN DEFAULT FALSE;
-
-ALTER TABLE conversations
-ADD COLUMN is_deleted_by_receiver BOOLEAN DEFAULT FALSE;
 */
 
