@@ -12,6 +12,51 @@ export const _createConversation = async (conversation_owner_id, item_owner_id, 
        throw new Error(`Error creating conversation: ${error.message}`);
     }
 };  
+/*
+export const _getLastMessagesForUser = async (user_id) => {
+  try {
+    // Подзапрос для нахождения последних сообщений для каждой беседы, в которой пользователь является владельцем
+    const lastMessagesSubquery = db("messages")
+      .select("m.conversation_id", "m.message_text", "m.created_at")
+      .max("m.created_at as max_created_at")
+      .from("messages as m")
+      .join("conversations as c", "m.conversation_id", "c.conversation_id")
+      .where(function() {
+        this.where("c.conversation_owner_id", user_id)
+            .orWhere("c.item_owner_id", user_id);
+      })
+      .groupBy("m.conversation_id");
+
+    // Основной запрос для получения полных данных последних сообщений и информации о пользователе
+    const result = await db("messages as m")
+      .join(
+        db.raw(`(${lastMessagesSubquery.toString()}) as last_messages`),
+        function() {
+          this.on("m.conversation_id", "last_messages.conversation_id")
+              .andOn("m.created_at", "last_messages.max_created_at");
+        }
+      )
+      .join("conversations as c", "m.conversation_id", "c.conversation_id")
+      .join("users as owner", function() {
+        this.on("c.conversation_owner_id", "owner.user_id");
+      })
+      .join("users as item_owner", function() {
+        this.on("c.item_owner_id", "item_owner.user_id");
+      })
+      .select(
+        "m.conversation_id",
+        "m.message_text as last_message", // Обновите имя поля
+        "m.created_at as last_message_time",
+        "owner.username as owner_username",
+        "item_owner.username as item_owner_username"
+      );
+
+    return result;
+  } catch (error) {
+    throw new Error(`Error fetching last messages for user: ${error.message}`);
+  }
+};
+*/
 
   export const _getAllUserConversations = async (user_id) => {
       try {

@@ -28,15 +28,27 @@ export const _getOneConversation = async (receiver_id, sender_id, item_id, my_us
       if (messages.length === 0) {
         return { messages: [], user: null };
       }
-      // Определяем ID пользователя, с которым переписываемся
+      
       const otherUserId = messages[0].sender_id === my_user_id ? messages[0].sender_id: messages[0].receiver_id;
-      // Получаем информацию о пользователе
+
       const user = await db("users")
         .select("*")
         .where("user_id", otherUserId)
         .first();
-  
-      return { messages, user };
+
+      const otherUserIdSecond = messages[0].sender_id === my_user_id ? messages[0].receiver_id: messages[0].sender_id;
+
+      const userSecond = await db("users")
+        .select("*")
+        .where("user_id", otherUserIdSecond)
+        .first();  
+      
+      const item = await db("items")
+        .select("*")
+        .where("item_id", item_id) 
+        .first();  
+
+      return { messages, user, userSecond, item };
     } catch (error) {
       throw new Error(`Error in messages.models: ${error.message}`);
     }
@@ -71,7 +83,10 @@ export const _getLastMessageFromEveryConversation = async (user_id) => {
             .select(
                 "messages.*",
                 "sender.username as sender_username",
-                "sender.email as sender_email",
+                //item_owner_id 
+
+                //"sender.email as sender_email",
+                //"receiver.email as receiver_email",
                 "receiver.username as receiver_username",
                 "items.title as item_title",
                 "items.price as item_price",
@@ -147,3 +162,17 @@ ADD COLUMN read BOOLEAN DEFAULT FALSE;
 ALTER TABLE messages
 ADD COLUMN conversation_id INTEGER REFERENCES conversations(conversation_id) ON DELETE CASCADE;
 */
+
+
+/*
+      const conversationId = messages[0].conversation_id;
+      const conversationOwnerId = await db("conversations")
+      .select("item_owner_id")
+      .where("conversation_id", conversationId)
+      .first();
+
+      const user = await db("users")
+        .select("user_id", "username")
+        .where("user_id", conversationOwnerId.item_owner_id)
+        .first();
+*/ 

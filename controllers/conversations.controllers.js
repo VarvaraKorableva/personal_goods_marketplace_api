@@ -1,6 +1,7 @@
 import {
     _createConversation,
     //_deleteConversationById,
+    //_getLastMessagesForUser,
     _getAllUserConversations,
   } from "../models/conversations.models.js"
 
@@ -39,3 +40,16 @@ export const getAllUserConversations = (req, res) => {
           res.status(404).json({ msg: "Not Found" });
         });
   };
+//_getLastMessagesForUser dont need
+/*
+export const getLastMessagesForUser = (req, res) => {
+  const { user_id } = req.params
+  console.log('req.params', req.params)
+  _getLastMessagesForUser(user_id)
+      .then((data) => {
+        res.json(data);
+      })
+      .catch((err) => {
+        res.status(404).json({ msg: "Not Found" });
+      });
+};*/
