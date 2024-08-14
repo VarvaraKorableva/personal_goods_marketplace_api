@@ -99,6 +99,28 @@ export const _getItemsBySubCategoriesByParentId = async (parent_id) => { /////ca
     }
   };
   
+  export const _updateIsReserved = async (item_id, user_id) => {
+    try {
+        const item = await db("items")
+            .where({ item_id, owner_id: user_id })
+            .first("reserved");
+
+        if (item) {
+            const newReservedValue = !item.reserved;
+
+            const result = await db("items")
+                .where({ item_id, owner_id: user_id })
+                .update('reserved', newReservedValue)
+                .returning("*");
+    
+            return result[0];
+        } else {
+            throw new Error("Item not found.");
+        }
+    } catch (error) {
+        throw new Error(`Error updating reservation status: ${error.message}`);
+    }
+};
 
 /*
 CREATE TABLE items (

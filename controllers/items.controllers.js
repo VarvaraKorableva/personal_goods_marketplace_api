@@ -7,6 +7,7 @@ import {
     _getAllItems,
     _getItemById,
     _getItemsBySubCategoriesByParentId,
+    _updateIsReserved,
   
   } from "../models/items.models.js"
   
@@ -86,3 +87,15 @@ import {
           res.status(404).json({ msg: "Not Found" });
         });
   };
+
+  export const updateIsReserved = (req, res) => {
+    const { item_id, user_id } = req.body;
+    _updateIsReserved( item_id, user_id )
+      .then((data) => {
+        res.json({ msg: "Successfully updated" });
+      })
+      .catch((err) => {
+        res.status(404).json({ msg: "Error, category not updated, try again" });
+      });
+  };
+  

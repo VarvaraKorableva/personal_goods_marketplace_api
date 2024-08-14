@@ -9,6 +9,7 @@ import {
     getAllItems,
     getItemById,
     getItemsBySubCategoriesByParentId,
+    updateIsReserved,
     
 } from "../controllers/items.controllers.js";
   
@@ -21,5 +22,7 @@ item_router.post('/', createItem)
 item_router.delete('/:item_id', deleteItem)
 
 item_router.get('/getItemsBySubCategoriesByParentId/:parent_id', getItemsBySubCategoriesByParentId)
+item_router.patch('/updateIsReserved', updateIsReserved)
+
 
 export { item_router }
