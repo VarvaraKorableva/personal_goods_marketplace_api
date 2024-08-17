@@ -16,4 +16,9 @@ export const upload = multer({
       cb(null, `${fileName}${path.extname(file.originalname)}`);
     },
   }),
-});
+}).fields([
+  { name: 'firstFile', maxCount: 1 },
+  { name: 'secondFile', maxCount: 1 },
+  { name: 'thirdFile', maxCount: 1 },
+  { name: 'fourthFile', maxCount: 1 }
+]);
