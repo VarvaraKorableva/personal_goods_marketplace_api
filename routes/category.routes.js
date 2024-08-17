@@ -12,7 +12,7 @@ import {
   
 category_router.get('/', getAllCategory)
 category_router.post('/', createCategory)
-category_router.delete('/', deleteCategory)
+category_router.delete('/:category_id', deleteCategory)
 
 category_router.patch('/', updateCategoryParentId)
 category_router.patch('/img', updateCategory)

@@ -54,7 +54,7 @@ export const getAllCategory = (req, res) => {
 };
 
 export const deleteCategory = (req, res) => {
-    const { category_id } = req.body
+    const { category_id } = req.params
     _deleteCategory(category_id)
       .then((data) => {
         res.json({ msg: "Deleted" })
