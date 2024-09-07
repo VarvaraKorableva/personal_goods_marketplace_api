@@ -1,5 +1,5 @@
 import nodemailer from'nodemailer'
-import { _saveVerificationCode, _getVerificationCode } from '../models/verifications.models.js'
+import { _saveVerificationCode, _getVerificationCode, _deleteVerificationCode } from '../models/verifications.models.js'
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -31,17 +31,53 @@ export const sendVerificationCode = async (req, res) => {
     res.status(500).send('Error sending verification code.');
   }
 };
+export const verifyCode = async (req, res) => {
+  const { email, code } = req.body;
+  try {
+    const verification = await _getVerificationCode(email, code);
+    
+    const deleteResult = await _deleteVerificationCode(email);
 
+    if (verification.length) {
+      res.json({ msg: "Code verified. You can now complete registration." });
+    } else {
+      res.json({ msg: "Invalid or expired verification code." });
+    }
+  } catch (error) {
+    console.error(error); // Логируем ошибку для отладки
+    res.status(500).json({ msg: "Error verifying code." }); // Используем 500 статус для ошибок сервера
+  }
+};
+
+
+/*
 export const verifyCode = async (req, res) => {
   const { email, code } = req.body;
   try {
     const verification = await _getVerificationCode(email, code);
     if (verification.length) {
       res.json({ msg: "Code verified. You can now complete registration." })
+      _deleteVerificationCode(email)
+        .then((data) => {
+          console.log(data)
+          console.log('deleted')
+        })
+        .catch((err) => {
+          res.status(404).json({ msg: "Not Found" });
+        });
     } else {
       res.json({ msg: "Invalid or expired verification code." })
+      _deleteVerificationCode(email)
+        .then((data) => {
+          console.log(data)
+          console.log('deleted')
+        })
+        .catch((err) => {
+          res.status(404).json({ msg: "Not Found" });
+        });
+      
     }
   } catch (error) {
     res.json({ msg: "Error verifying code." })
   }
-};
+}; */

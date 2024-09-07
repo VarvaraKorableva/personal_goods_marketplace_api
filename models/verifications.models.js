@@ -27,3 +27,16 @@ export const _saveVerificationCode = async (email, code) => {
       throw error
     }
   }
+
+  export const _deleteVerificationCode = async (email) => {
+    try {
+      const deleted = await db('email_verifications')
+        .where({ email })
+        .del();
+
+        return deleted
+
+    } catch (error) {
+      throw error;
+    }
+  };
