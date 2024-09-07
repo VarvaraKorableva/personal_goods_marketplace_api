@@ -17,11 +17,11 @@ export const _saveVerificationCode = async (email, code) => {
   
   export  const _getVerificationCode = async (email, code) => {
     try {
+      const now = new Date().toISOString();
       const verification = await db('email_verifications')
       .select("*")
       .where({ email, verification_code: code })
-      .andWhere('expires_at', '>', new Date())
-      
+      .andWhere('expires_at', '>', now)
       return verification
     } catch (error) {
       throw error

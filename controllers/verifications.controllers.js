@@ -36,7 +36,7 @@ export const verifyCode = async (req, res) => {
   const { email, code } = req.body;
   try {
     const verification = await _getVerificationCode(email, code);
-    if (verification) {
+    if (verification.length) {
       res.json({ msg: "Code verified. You can now complete registration." })
     } else {
       res.json({ msg: "Invalid or expired verification code." })
