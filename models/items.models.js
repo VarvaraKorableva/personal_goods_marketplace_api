@@ -122,6 +122,19 @@ export const _getItemsBySubCategoriesByParentId = async (parent_id) => { /////ca
     }
 };
 
+
+export const _updateImagesArr = async (item_id, imagesArr) => {
+    try {
+        const result = await db("items")
+            .where({ item_id})
+            .update('images', imagesArr)
+            .returning("*");
+            return result[0];
+    } catch (error) {
+        throw new Error(`Error updating reservation status: ${error.message}`);
+    }
+};
+
 /*
 CREATE TABLE items (
     item_id SERIAL PRIMARY KEY,
