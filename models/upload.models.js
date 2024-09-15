@@ -1,4 +1,5 @@
 import { db } from "../config/pg.config.js";
+import { _updateImagesArr } from './items.models.js'
 /*
 export const uploadSingle = async (item_id, key, mimetype, location, originalname) => {
 
@@ -61,7 +62,7 @@ export const _uploadMultiple = async (user_id, item_id, files) => {
 
     const fileKeys = ['firstFile', 'secondFile', 'thirdFile', 'fourthFile'];
 
-    //const imagesArr = []
+    const imagesArr = []
 
     for (const key of fileKeys) {
       const fileArray = files[key];
@@ -69,7 +70,7 @@ export const _uploadMultiple = async (user_id, item_id, files) => {
       if (fileArray) {
         for (const file of fileArray) {
 
-          //imagesArr.push(file.location)
+          imagesArr.push(file.location)
 
           const result = await db("uploads").insert({
             item_id,
@@ -84,7 +85,7 @@ export const _uploadMultiple = async (user_id, item_id, files) => {
         }
       }
     }
-
+    _updateImagesArr(item_id, imagesArr)
     return uploadedFiles;
   } catch (error) {
     console.error("Ошибка при сохранении нескольких файлов:", error);
