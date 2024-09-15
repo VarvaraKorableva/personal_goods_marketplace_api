@@ -55,17 +55,22 @@ export const _deleteImage = (images_of_goods_id) => {
 };
 
 export const _uploadMultiple = async (user_id, item_id, files) => {
-  
+  //console.log('files', files.fourthFile[0].location)
   try {
     const uploadedFiles = [];
 
     const fileKeys = ['firstFile', 'secondFile', 'thirdFile', 'fourthFile'];
 
+    //const imagesArr = []
+
     for (const key of fileKeys) {
       const fileArray = files[key];
+      
       if (fileArray) {
         for (const file of fileArray) {
-          
+
+          //imagesArr.push(file.location)
+
           const result = await db("uploads").insert({
             item_id,
             owner_id: user_id,
