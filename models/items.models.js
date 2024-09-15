@@ -27,7 +27,7 @@ export const _getAllItemsByCategoryId = async (category_id) => {
         const categoryId = categories.map(category => category.category_id);
         categoryId.push(Number(category_id))
         
-        const items = await db("items").select("*").whereIn("category_id", categoryId)
+        const items = await db("items").select("*").whereIn("category_id", categoryId).andWhere("deleted", false);
         
         return items;
     
@@ -39,7 +39,7 @@ export const _getAllItemsByCategoryId = async (category_id) => {
 //all my, (not all sellor)
 export const _getAllItemsByUserId = async (owner_id) => {
     try {
-        const result = await db("items").select("*").where({ owner_id })
+        const result = await db("items").select("*").where({ owner_id }).andWhere("deleted", false);
         return result
     } catch (error) {
         throw new Error(`error: ${error.message}`);
@@ -48,7 +48,7 @@ export const _getAllItemsByUserId = async (owner_id) => {
 
 export const _getAllItems = async () => {
     try {
-        const result = await db("items").select("*").orderBy("item_id", "desc")
+        const result = await db("items").select("*").where("deleted", false).orderBy("item_id", "desc")
         //.limit(40);
         return result
     } catch (error) {
@@ -58,20 +58,26 @@ export const _getAllItems = async () => {
 
 export const _getAllItemsByCityId = async (city_id) => {
     try {
-        const result = await db("items").select("*").where({ city_id })
+        const result = await db("items").select("*").where({ city_id }).andWhere("deleted", false);
         return result
     } catch (error) {
         throw new Error(`error in _getAllItemsByCityId: ${error.message}`);
     }
 };
-  
+/*  
 export const _deleteItem = (item_id) => {
     return db("items").delete("*").where({ item_id })
+};*/
+
+export const _deleteItem = (item_id) => {
+    return db("items")
+        .where({ item_id })
+        .update({ deleted: true });
 };
 
 export const _getItemById = async (item_id) => {
     try {
-        const result = await db("items").select("*").where({ item_id })
+        const result = await db("items").select("*").where({ item_id }).andWhere("deleted", false);
         return result
     } catch (error) {
         throw new Error(`error: ${error.message}`);
@@ -91,7 +97,7 @@ export const _getItemsBySubCategoriesByParentId = async (parent_id) => { /////ca
       const categoryId2 = categories2.map(category => category.category_id);
       categoryId2.push(Number(parent_id))
 
-      const items = await db("items").select("*").whereIn("category_id", categoryId2);
+      const items = await db("items").select("*").whereIn("category_id", categoryId2).andWhere("deleted", false);
       return items;
   
     } catch (error) {
@@ -185,4 +191,7 @@ ALTER COLUMN city TYPE VARCHAR(200);
 
 ALTER TABLE items
 ADD COLUMN images TEXT[];
+
+ALTER TABLE items
+ADD COLUMN deleted BOOLEAN DEFAULT FALSE;
 */

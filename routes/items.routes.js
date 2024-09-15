@@ -21,7 +21,7 @@ item_router.get('/all/:item_id', getItemById)
 item_router.get('/getItemsByFilter', getItemsByFilter)
 
 item_router.post('/', createItem)
-item_router.delete('/:item_id', deleteItem)
+item_router.patch('/:item_id', deleteItem)
 
 item_router.get('/getItemsBySubCategoriesByParentId/:parent_id', getItemsBySubCategoriesByParentId)
 item_router.patch('/updateIsReserved', updateIsReserved)

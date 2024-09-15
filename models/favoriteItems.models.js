@@ -12,7 +12,7 @@ export const _addToFavoriteItems = async (favorite_collector_id, item_id) => {
     throw new Error(`Error creating user: ${error.message}`);
   }
 };
-
+/*
 export const _getAllMyFavoriteItems = async (favorite_collector_id) => {
     try {
         const result = await db("favorite_items")
@@ -22,6 +22,18 @@ export const _getAllMyFavoriteItems = async (favorite_collector_id) => {
     } catch (error) {
         throw new Error(`Error in _getAllMyFavoriteItems: ${error.message}`);
     }
+};*/
+
+export const _getAllMyFavoriteItems = async (favorite_collector_id) => {
+  try {
+      const result = await db("favorite_items")
+          .join("items", "favorite_items.item_id", "items.item_id")
+          .select("items.*")
+          .where({ favorite_collector_id });
+      return result;
+  } catch (error) {
+      throw new Error(`Error in _getAllMyFavoriteItems: ${error.message}`);
+  }
 };
   
 export const _deleteFavoriteItems = (item_id) => {

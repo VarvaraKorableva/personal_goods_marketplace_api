@@ -25,7 +25,7 @@ export const getAllMyFavoriteItems = (req, res) => {
         res.status(404).json({ msg: "Not Found" });
     });
 };
-  
+
 export const deleteFavoriteItems = (req, res) => {
     const { item_id } = req.params
     _deleteFavoriteItems(item_id)
