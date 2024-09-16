@@ -53,7 +53,7 @@ export const _getOneConversation = async (receiver_id, sender_id, item_id, my_us
       throw new Error(`Error in messages.models: ${error.message}`);
     }
   };
-
+/*
 export const _getLastMessageFromEveryConversation = async (user_id) => {
     try {
         // Подзапрос для нахождения последних сообщений для каждой комбинации (item, sender и receiver)
@@ -79,19 +79,15 @@ export const _getLastMessageFromEveryConversation = async (user_id) => {
             .join("users as sender", "messages.sender_id", "sender.user_id")
             .join("users as receiver", "messages.receiver_id", "receiver.user_id")
             .join("items", "messages.item_id", "items.item_id")
-            .leftJoin("uploads", "items.item_id", "uploads.item_id") // Left join with uploads table
             .select(
                 "messages.*",
                 "sender.username as sender_username",
-                //item_owner_id 
-
-                //"sender.email as sender_email",
-                //"receiver.email as receiver_email",
                 "receiver.username as receiver_username",
                 "items.title as item_title",
                 "items.price as item_price",
                 "items.owner_id as item_owner_id",
-                "uploads.location as image_location",
+                "items.images as images",
+                "items.deleted as deleted",
             )
             .orderBy("messages.timestamp", "asc");
 
@@ -109,7 +105,7 @@ export const _getLastMessageFromEveryConversation = async (user_id) => {
     } catch (error) {
         throw new Error(`Error in messages.models: ${error.message}`);
     }
-};
+};*/
 
 export const _deleteMessage = (message_id) => {
     return db("messages").delete("*").where({ message_id })
@@ -141,6 +137,132 @@ export const _deleteMessage = (message_id) => {
         throw new Error(`Error in messages.models: ${error.message}`);
     }
   };
+
+
+/*
+  export const _getLastMessageFromEveryConversation = async (user_id) => {
+    try {
+      // CTE для получения всех conversation_id для заданного user_id
+      const userConversationsQuery = db('conversations')
+        .select('conversation_id')
+        .where(function() {
+          this.where('conversation_owner_id', user_id)
+            .orWhere('item_owner_id', user_id);
+        });
+  
+      // Выполняем запрос для получения всех conversation_id
+      const userConversations = (await userConversationsQuery).map(row => row.conversation_id);
+  
+      // CTE для получения последнего сообщения для каждой беседы
+      const lastMessages = await db('messages as m')
+        .select('m.conversation_id', 'm.message_id', 'm.sender_id', 'm.receiver_id', 'm.message_text', 'm.timestamp')
+        .join(
+          db.raw(`
+            (SELECT conversation_id, MAX(timestamp) AS max_timestamp
+             FROM messages
+             GROUP BY conversation_id) lm
+          `),
+          function() {
+            this.on('m.conversation_id', '=', 'lm.conversation_id')
+              .andOn('m.timestamp', '=', 'lm.max_timestamp');
+          }
+        )
+        .whereIn('m.conversation_id', userConversations) // Используем полученные conversation_id
+        .join('users as sender', 'm.sender_id', 'sender.user_id')
+        .join('users as receiver', 'm.receiver_id', 'receiver.user_id')
+        .join('items', 'm.item_id', 'items.item_id')
+        .select(
+          'm.*',
+          'sender.username as sender_username',
+          'receiver.username as receiver_username',
+          'items.title as item_title',
+          'items.price as item_price',
+          'items.owner_id as item_owner_id',
+          'items.images as images',
+          'items.deleted as deleted'
+        )
+        .orderBy('m.timestamp', 'asc'); // Используем псевдоним таблицы 'm'
+  
+      return lastMessages;
+    } catch (error) {
+      console.error(`Error retrieving last messages for user: ${error.message}`);
+      throw new Error(`Error retrieving last messages for user: ${error.message}`);
+    }
+  };*/
+  export const _getLastMessageFromEveryConversation = async (user_id) => {
+    try {
+      // Шаг 1: Получить все conversation_id для заданного user_id
+      const userConversationsQuery = db('conversations')
+        .select('conversation_id')
+        .where(function() {
+          this.where('conversation_owner_id', user_id)
+            .orWhere('item_owner_id', user_id);
+        });
+  
+      // Выполняем запрос для получения всех conversation_id
+      const userConversations = (await userConversationsQuery).map(row => row.conversation_id);
+  
+      // Шаг 2: Подсчитать непрочитанные сообщения для каждой беседы
+      const unreadMessagesCountsQuery = db('messages')
+        .count('* as unread_count')
+        .where('read', false)
+        .andWhere(function() {
+          this.whereIn('conversation_id', userConversations);
+        })
+        .groupBy('conversation_id');
+  
+      const unreadMessagesCounts = await unreadMessagesCountsQuery;
+  
+      // Преобразуем результат подсчета в объект для удобства
+      const unreadCountsMap = unreadMessagesCounts.reduce((acc, row) => {
+        acc[row.conversation_id] = row.unread_count;
+        return acc;
+      }, {});
+  
+      // Шаг 3: Получить последние сообщения для каждой беседы
+      const lastMessages = await db('messages as m')
+        .select('m.conversation_id', 'm.message_id', 'm.sender_id', 'm.receiver_id', 'm.message_text', 'm.timestamp')
+        .join(
+          db.raw(`
+            (SELECT conversation_id, MAX(timestamp) AS max_timestamp
+             FROM messages
+             GROUP BY conversation_id) lm
+          `),
+          function() {
+            this.on('m.conversation_id', '=', 'lm.conversation_id')
+              .andOn('m.timestamp', '=', 'lm.max_timestamp');
+          }
+        )
+        .whereIn('m.conversation_id', userConversations) // Используем полученные conversation_id
+        .join('users as sender', 'm.sender_id', 'sender.user_id')
+        .join('users as receiver', 'm.receiver_id', 'receiver.user_id')
+        .join('items', 'm.item_id', 'items.item_id')
+        .select(
+          'm.*',
+          'sender.username as sender_username',
+          'receiver.username as receiver_username',
+          'items.title as item_title',
+          'items.price as item_price',
+          'items.owner_id as item_owner_id',
+          'items.images as images',
+          'items.deleted as deleted'
+        )
+        .orderBy('m.timestamp', 'asc');
+  
+      // Шаг 4: Добавить количество непрочитанных сообщений к результатам
+      const result = lastMessages.map(message => ({
+        ...message,
+        unread_count: unreadCountsMap[message.conversation_id] || 0
+      }));
+  
+      return result;
+    } catch (error) {
+      console.error(`Error retrieving last messages for user: ${error.message}`);
+      throw new Error(`Error retrieving last messages for user: ${error.message}`);
+    }
+  };
+  
+
 
 
 /*CREATE TABLE messages (
