@@ -65,9 +65,9 @@ import {
 };
 
 export const markMessagesAsRead = (req, res) => {
-  const { receiver_id, sender_id, item_id, user_id } = req.params
+  const { conversation_id, user_id } = req.params
   
-  _markMessagesAsRead(receiver_id, sender_id, item_id, user_id)
+  _markMessagesAsRead( conversation_id, user_id )
       .then((data) => {
         res.json(data);
       })
