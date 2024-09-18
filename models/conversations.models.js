@@ -81,7 +81,30 @@ export const _deleteConversation = async (user_id, conversation_id) => {
         .update({ is_conversation_deleted: true });
     }
 
-    console.log('Conversation updated successfully');
+    const messagesToDelete = await db('messages')
+      .select("*")
+      .where({ conversation_id: conversation_id });
+
+    if (messagesToDelete.length < 1) {
+      throw new Error('No messages found for this conversation');
+    }
+
+    for (const message of messagesToDelete) {
+      let updateMessagesData = {};
+      if (message.sender_id === user_id) {
+        updateMessagesData.is_deleted_by_sender = true;
+      } else if (message.receiver_id === user_id) {
+        updateMessagesData.is_deleted_by_receiver = true;
+      } else {
+        throw new Error("User is not authorized to delete this conversation's messages");
+      }
+
+      if (Object.keys(updateMessagesData).length > 0) {
+        await db('messages')
+          .where({ message_id: message.message_id })
+          .update(updateMessagesData);
+      }
+    }
 
   } catch (error) {
     console.error(`Error deleting conversation: ${error.message}`);
