@@ -16,6 +16,6 @@ messages_router.get('/getUnreadbleMessages/:user_id', getUnreadbleMessages)
 
 messages_router.post('/', createMessages)
 messages_router.delete('/:message_id', deleteMessage)
-messages_router.patch('/markMessagesAsRead/:receiver_id/:sender_id/:item_id/:user_id', markMessagesAsRead)
+messages_router.patch('/markMessagesAsRead/:conversation_id/:user_id', markMessagesAsRead)
 
 export { messages_router}

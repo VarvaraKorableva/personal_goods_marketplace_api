@@ -65,23 +65,23 @@ export const _deleteMessage = (message_id) => {
     return db("messages").delete("*").where({ message_id })
 };
 
-  export const _markMessagesAsRead = async (receiver_id, sender_id, item_id, user_id) => {
-    try {
-        const result = await db("messages")
-        .select("*")
+export const _markMessagesAsRead = async (conversation_id, user_id) => {
+  try {
+      const updatedCount = await db("messages")
+          .where({ conversation_id, receiver_id: user_id })
+          .update({ read: true });
 
-        .where({ receiver_id, sender_id, item_id })
-        .orWhere({ receiver_id: sender_id, sender_id: receiver_id, item_id: item_id })
+      const updatedMessages = await db("messages")
+          .select("*")
+          .where({ conversation_id })
+          .andWhere({ receiver_id: user_id });
 
-        .andWhere({ receiver_id: user_id }) // Условие, чтобы обновлять только если receiver_id совпадает с user_id
-
-        .update({ read: true });
-  
-        return result
-    } catch (error) {
-        throw new Error(`Error in messages.models: ${error.message}`);
-    }
-  };
+      return updatedMessages;
+  } catch (error) {
+      console.error(`Error in messages.models: ${error.message}`);
+      throw new Error(`Error in messages.models: ${error.message}`);
+  }
+};
 
   export const _getUnreadbleMessages = async (user_id) => {
     try {
