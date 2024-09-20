@@ -48,9 +48,25 @@ export const _getAllItemsByUserId = async (owner_id) => {
 
 export const _getAllItems = async () => {
     try {
-        const result = await db("items").select("*").where("deleted", false).orderBy("item_id", "desc")
+        const result = await db("items")
+        .select("*")
+        /*.where("deleted", false)
+        .orderBy("item_id", "desc")*/
+        .where("deleted", false)
+        .orderByRaw("RANDOM()")
+        //.limit(20);   
         //.limit(40);
-        return result
+        //return result
+        // Считаем общее количество элементов, которые не удалены
+        const [{ totalCount }] = await db("items")
+            .where("deleted", false)
+            .count("* as totalCount");
+
+        return {
+            result,      // Список 20 случайных элементов
+            totalCount  // Общее количество элементов
+        };
+
     } catch (error) {
         throw new Error(`error: ${error.message}`);
     }
