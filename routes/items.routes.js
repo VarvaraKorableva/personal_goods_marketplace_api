@@ -24,7 +24,7 @@ item_router.post('/', createItem)
 item_router.patch('/:item_id', deleteItem)
 
 item_router.get('/getItemsBySubCategoriesByParentId/:parent_id', getItemsBySubCategoriesByParentId)
-item_router.patch('/updateIsReserved', updateIsReserved)
+item_router.patch('/updateIsReserved/:item_id/:user_id', updateIsReserved)
 
 
 export { item_router }

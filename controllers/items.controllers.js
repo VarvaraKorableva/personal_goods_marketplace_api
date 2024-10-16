@@ -89,13 +89,13 @@ import {
   };
 
   export const updateIsReserved = (req, res) => {
-    const { item_id, user_id } = req.body;
+    const { item_id, user_id } = req.params
     _updateIsReserved( item_id, user_id )
       .then((data) => {
         res.json({ msg: "Successfully updated" });
       })
       .catch((err) => {
-        res.status(404).json({ msg: "Error, category not updated, try again" });
+        res.status(404).json({ msg: "Error, try again" });
       });
   };
   
