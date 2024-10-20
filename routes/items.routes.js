@@ -10,6 +10,10 @@ import {
     getItemById,
     getItemsBySubCategoriesByParentId,
     updateIsReserved,
+    updateCity,
+    updatePrice,
+    updateDescription,
+    updateCondition,
 } from "../controllers/items.controllers.js";
 import { getItemsByFilter } from "../controllers/itemsSearch.controllers.js"
   
@@ -25,6 +29,11 @@ item_router.patch('/:item_id', deleteItem)
 
 item_router.get('/getItemsBySubCategoriesByParentId/:parent_id', getItemsBySubCategoriesByParentId)
 item_router.patch('/updateIsReserved/:item_id/:user_id', updateIsReserved)
+
+item_router.patch('/updateCity/:item_id', updateCity)
+item_router.patch('/updatePrice/:item_id', updatePrice)
+item_router.patch('/updateDescription/:item_id', updateDescription)
+item_router.patch('/updateCondition/:item_id', updateCondition)
 
 
 export { item_router }

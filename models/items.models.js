@@ -157,6 +157,62 @@ export const _updateImagesArr = async (item_id, imagesArr) => {
     }
 };
 
+export const _updateCity = async (item_id, city) => {
+    try {
+        const result = await db("items")
+            .where({ item_id })
+            .update({ city })
+            .returning("*");
+
+        return result[0];
+    } catch (error) {
+        console.error("Error updating city:", error);
+        throw error;
+    }
+};
+
+export const _updatePrice = async (item_id, price) => {
+    try {
+        const result = await db("items")
+            .where({ item_id })
+            .update({ price })
+            .returning("*");
+
+        return result[0];
+    } catch (error) {
+        console.error("Error updating price:", error);
+        throw error;
+    }
+};
+
+export const _updateCondition = async (item_id, condition) => {
+    try {
+        const result = await db("items")
+            .where({ item_id })
+            .update({ condition })
+            .returning("*");
+
+        return result[0];
+    } catch (error) {
+        console.error("Error updating price:", error);
+        throw error;
+    }
+};
+
+export const _updateDescription = async (item_id, description) => {
+    try {
+        const result = await db("items")
+            .where({ item_id })
+            .update({ description })
+            .returning("*");
+
+        return result[0];
+    } catch (error) {
+        console.error("Error updating price:", error);
+        throw error;
+    }
+};
+
 /*
 CREATE TABLE items (
     item_id SERIAL PRIMARY KEY,
@@ -210,4 +266,20 @@ ADD COLUMN images TEXT[];
 
 ALTER TABLE items
 ADD COLUMN deleted BOOLEAN DEFAULT FALSE;
+
+ALTER TABLE items ADD COLUMN updated_at TIMESTAMP;
+
+CREATE OR REPLACE FUNCTION update_updated_at_column()
+RETURNS TRIGGER AS $$
+BEGIN
+   NEW.updated_at = CURRENT_TIMESTAMP; -- Обновляем колонку при изменении
+   RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER update_items_updated_at
+BEFORE UPDATE ON items
+FOR EACH ROW
+EXECUTE FUNCTION update_updated_at_column();
+
 */

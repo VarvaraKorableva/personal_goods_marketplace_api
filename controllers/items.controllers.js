@@ -8,6 +8,10 @@ import {
     _getItemById,
     _getItemsBySubCategoriesByParentId,
     _updateIsReserved,
+    _updateCity,
+    _updatePrice,
+    _updateCondition,
+    _updateDescription
   
   } from "../models/items.models.js"
   
@@ -98,4 +102,71 @@ import {
         res.status(404).json({ msg: "Error, try again" });
       });
   };
-  
+
+  export const updateCity = (req, res) => {
+    const { city } = req.body;
+    const { item_id } = req.params;
+    _updateCity(item_id, city)
+      .then((updatedItem) => {
+        if (updatedItem) {
+          res.json({ msg: "Successfully updated", item: updatedItem });
+        } else {
+          res.status(404).json({ msg: "Item not found" });
+        }
+      })
+      .catch((err) => {
+        console.error("Error updating city:", err);
+        res.status(500).json({ msg: "Error, try again" });
+      });
+};
+
+export const updatePrice = (req, res) => {
+  const { price } = req.body;
+  const { item_id } = req.params;
+  _updatePrice(item_id, price)
+    .then((updatedItem) => {
+      if (updatedItem) {
+        res.json({ msg: "Successfully updated", item: updatedItem });
+      } else {
+        res.status(404).json({ msg: "Item not found" });
+      }
+    })
+    .catch((err) => {
+      console.error("Error updating price:", err);
+      res.status(500).json({ msg: "Error, try again" });
+    });
+};
+
+export const updateCondition = (req, res) => {
+  const { condition } = req.body;
+  const { item_id } = req.params;
+  _updateCondition(item_id, condition)
+    .then((updatedItem) => {
+      if (updatedItem) {
+        res.json({ msg: "Successfully updated", item: updatedItem });
+      } else {
+        res.status(404).json({ msg: "Item not found" });
+      }
+    })
+    .catch((err) => {
+      console.error("Error updating condition:", err);
+      res.status(500).json({ msg: "Error, try again" });
+    });
+};
+
+export const updateDescription = (req, res) => {
+  const { description } = req.body;
+  const { item_id } = req.params;
+  _updateDescription(item_id, description)
+    .then((updatedItem) => {
+      if (updatedItem) {
+        res.json({ msg: "Successfully updated", item: updatedItem });
+      } else {
+        res.status(404).json({ msg: "Item not found" });
+      }
+    })
+    .catch((err) => {
+      console.error("Error updating description:", err);
+      res.status(500).json({ msg: "Error, try again" });
+    });
+};
