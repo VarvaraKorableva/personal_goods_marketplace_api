@@ -61,6 +61,7 @@ import {
 
   export const getAllItems = (req, res) => {
     const { page = 1, limit = 20 } = req.params;
+    
     _getAllItems({ page: parseInt(page), limit: parseInt(limit) })
         .then((data) => {
           res.json(data);

@@ -55,7 +55,7 @@ export const _getAllItems = async ({ page = 1, limit = 20 }) => {
         const result = await db("items")
             .select("*")
             .where("deleted", false)
-            .orderBy("item_id", "desc")  // Вы можете поменять сортировку, если нужно
+            .orderBy("item_id")  // , "desc" Вы можете поменять сортировку, если нужно
             .limit(limit)
             .offset(offset); // Применяем смещение для пагинации
 
@@ -65,8 +65,8 @@ export const _getAllItems = async ({ page = 1, limit = 20 }) => {
             .count("* as totalCount");
 
         return {
-            result,      // Список элементов
-            totalCount   // Общее количество элементов
+            result,
+            totalCount
         };
 
     } catch (error) {
