@@ -19,7 +19,7 @@ import { getItemsByFilter } from "../controllers/itemsSearch.controllers.js"
   
 item_router.get('/categoryId/:category_id', getAllItemsByCategoryId)
 item_router.get('/userId/:owner_id', getAllItemsByUserId)
-item_router.get('/all', getAllItems)
+item_router.get('/all/:page/:limit', getAllItems)
 item_router.get('/all/:item_id', getItemById)
 
 item_router.get('/getItemsByFilter', getItemsByFilter)

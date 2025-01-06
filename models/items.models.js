@@ -46,14 +46,42 @@ export const _getAllItemsByUserId = async (owner_id) => {
     }
 };
 
+export const _getAllItems = async ({ page = 1, limit = 20 }) => {
+    try {
+        // Рассчитываем смещение (offset) для пагинации
+        const offset = (page - 1) * limit;
+
+        // Запрос на получение данных с пагинацией
+        const result = await db("items")
+            .select("*")
+            .where("deleted", false)
+            .orderBy("item_id", "desc")  // Вы можете поменять сортировку, если нужно
+            .limit(limit)
+            .offset(offset); // Применяем смещение для пагинации
+
+        // Считаем общее количество элементов, которые не удалены
+        const [{ totalCount }] = await db("items")
+            .where("deleted", false)
+            .count("* as totalCount");
+
+        return {
+            result,      // Список элементов
+            totalCount   // Общее количество элементов
+        };
+
+    } catch (error) {
+        throw new Error(`error: ${error.message}`);
+    }
+};
+
+/*
 export const _getAllItems = async () => {
     try {
         const result = await db("items")
         .select("*")
-        /*.where("deleted", false)
-        .orderBy("item_id", "desc")*/
+        .orderBy("item_id", "desc")
         .where("deleted", false)
-        .orderByRaw("RANDOM()")
+        //.orderByRaw("RANDOM()")
         //.limit(20);   
         //.limit(40);
         //return result
@@ -70,7 +98,7 @@ export const _getAllItems = async () => {
     } catch (error) {
         throw new Error(`error: ${error.message}`);
     }
-};
+};*/
 
 export const _getAllItemsByCityId = async (city_id) => {
     try {
