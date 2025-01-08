@@ -76,6 +76,26 @@ export const _adCountDecrement = async (user_id) => {
   }
 };
 
+export const _updatePassword = async (email, newPassword) => {
+  try {
+    const user = await db('users').where({ email }).first();
+    if (!user) {
+      throw new Error('User not found');
+    }
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    const result = await db('users')
+      .where({ email })
+      .update({ password: hashedPassword })
+      .returning('*');
+
+    return result[0];
+  } catch (error) {
+    console.error('Error updating password:', error);
+    throw new Error(error.message);
+  }
+};
+
 /*
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,

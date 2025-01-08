@@ -12,6 +12,7 @@ import {
   _getUserById,
   _adCountIncrement,
   _adCountDecrement,
+  _updatePassword,
 
 } from "../models/users.models.js"
 
@@ -132,6 +133,18 @@ export const adCountDecrement = (req, res) => {
   const { user_id } = req.params
   
   _adCountDecrement(user_id)
+      .then((data) => {
+        res.json(data);
+      })
+      .catch((err) => {
+        res.status(404).json({ msg: "Not Found" });
+      });
+};
+
+export const updatePassword = (req, res) => {
+  const { email, newPassword } = req.body;
+
+  _updatePassword(email.email, email.newPassword)
       .then((data) => {
         res.json(data);
       })

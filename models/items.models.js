@@ -48,18 +48,14 @@ export const _getAllItemsByUserId = async (owner_id) => {
 
 export const _getAllItems = async ({ page = 1, limit = 20 }) => {
     try {
-        // Рассчитываем смещение (offset) для пагинации
         const offset = (page - 1) * limit;
-
-        // Запрос на получение данных с пагинацией
         const result = await db("items")
             .select("*")
             .where("deleted", false)
-            .orderBy("item_id")  // , "desc" Вы можете поменять сортировку, если нужно
+            .orderBy("created_at", "desc")
             .limit(limit)
-            .offset(offset); // Применяем смещение для пагинации
+            .offset(offset);
 
-        // Считаем общее количество элементов, которые не удалены
         const [{ totalCount }] = await db("items")
             .where("deleted", false)
             .count("* as totalCount");

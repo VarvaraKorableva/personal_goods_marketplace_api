@@ -31,6 +31,7 @@ export const sendVerificationCode = async (req, res) => {
     res.status(500).send('Error sending verification code.');
   }
 };
+
 export const verifyCode = async (req, res) => {
   const { email, code } = req.body;
   try {

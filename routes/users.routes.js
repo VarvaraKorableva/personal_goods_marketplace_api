@@ -9,6 +9,7 @@ import {
     logoutUser,
     adCountIncrement,
     adCountDecrement,
+    updatePassword,
 } from "../controllers/users.controllers.js";
 
 users_router.post('/signup', createUser)
@@ -21,5 +22,7 @@ users_router.delete('/me', deleteUser)
 
 users_router.patch('/adCountIncrement/:user_id', adCountIncrement)
 users_router.patch('/adCountDecrement/:user_id', adCountDecrement)
+
+users_router.patch('/updatepassword', updatePassword)
 
 export { users_router };
