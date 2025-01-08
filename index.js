@@ -29,6 +29,8 @@ app.use(cors({
     'http://localhost:3002',
     'https://personal-goods-marketplace-client.onrender.com',
     'http://personal-goods-marketplace-client.onrender.com',
+    'http://personal-goods-marketplace-api.onrender.com',
+    'https://personal-goods-marketplace-api.onrender.com',
   ],
 }));
 
