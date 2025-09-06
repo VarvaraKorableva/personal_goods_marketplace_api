@@ -11,7 +11,11 @@ import {
 } from "../controllers/category.controllers.js";
   
 category_router.get('/', getAllCategory)
-category_router.post('/', createCategory)
+//category_router.post('/create', createCategory)
+category_router.post('/create', (req, res, next) => {
+    console.log("POST /category/create hit!");
+    next();
+  }, createCategory);
 category_router.delete('/:category_id', deleteCategory)
 
 category_router.patch('/', updateCategoryParentId)

@@ -1,18 +1,5 @@
 import { db } from "../config/pg.config.js";
 import { _updateImagesArr } from './items.models.js'
-/*
-export const uploadSingle = async (item_id, key, mimetype, location, originalname) => {
-
-  try {
-    const result = await db("uploads")
-    .insert({ item_id, key, mimetype, location, originalname })
-    .returning("*");
-    return result[0];
-  } catch (error) {
-    console.error("Ошибка при вставке данных:", error);
-    return null;
-  }
-};*/
 
 export const uploadSingle = async (item_id, key, mimetype, location, originalname) => {
   return await db("uploads").insert({

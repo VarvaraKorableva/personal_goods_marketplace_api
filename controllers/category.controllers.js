@@ -17,8 +17,11 @@ export const createCategory = (req, res) => {
         res.json({ msg: "Successfully added" });
       })
       .catch((err) => {
-        res.status(404).json({ msg: "Error, category not added, try again" });
+        console.error("Ошибка при добавлении категории:", err);
+        res.status(500).json({ msg: "Error, category not added, try again", error: err.message });
       });
+      
+      
 };
 
 export const updateCategory = (req, res) => {

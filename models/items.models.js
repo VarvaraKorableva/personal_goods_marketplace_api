@@ -48,53 +48,30 @@ export const _getAllItemsByUserId = async (owner_id) => {
 
 export const _getAllItems = async ({ page = 1, limit = 20 }) => {
     try {
-        const offset = (page - 1) * limit;
-        const result = await db("items")
-            .select("*")
-            .where("deleted", false)
-            .orderBy("created_at", "desc")
-            .limit(limit)
-            .offset(offset);
-
-        const [{ totalCount }] = await db("items")
-            .where("deleted", false)
-            .count("* as totalCount");
-
-        return {
-            result,
-            totalCount
-        };
-
-    } catch (error) {
-        throw new Error(`error: ${error.message}`);
-    }
-};
-
-/*
-export const _getAllItems = async () => {
-    try {
-        const result = await db("items")
+      const pageNum = parseInt(page, 10) || 1;
+      const limitNum = parseInt(limit, 10) || 20;
+      const offset = (pageNum - 1) * limitNum;
+  
+      const result = await db("items")
         .select("*")
-        .orderBy("item_id", "desc")
         .where("deleted", false)
-        //.orderByRaw("RANDOM()")
-        //.limit(20);   
-        //.limit(40);
-        //return result
-        // Считаем общее количество элементов, которые не удалены
-        const [{ totalCount }] = await db("items")
-            .where("deleted", false)
-            .count("* as totalCount");
-
-        return {
-            result,      // Список 20 случайных элементов
-            totalCount  // Общее количество элементов
-        };
-
+        .orderBy("created_at", "desc")
+        .limit(limitNum)
+        .offset(offset);
+  
+      const [{ totalCount }] = await db("items")
+        .where("deleted", false)
+        .count("* as totalCount");
+  
+      return {
+        result,
+        totalCount
+      };
+  
     } catch (error) {
-        throw new Error(`error: ${error.message}`);
+      throw new Error(`error: ${error.message}`);
     }
-};*/
+  };
 
 export const _getAllItemsByCityId = async (city_id) => {
     try {
