@@ -4,7 +4,7 @@ export async function up(knex) {
     });
   }
   
-  export async function down(knex) {
+  export async function down (knex) {
     await knex.schema.alterTable('category', (table) => {
       table.dropColumn('name_rus');
     });

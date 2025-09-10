@@ -22,7 +22,22 @@ import {
           res.json(data);
         })
         .catch((err) => {
-          res.status(404).json({ msg: "Error, category not added, try again" });
+          //res.status(404).json({ msg: "Error, category not added, try again" });
+          console.error("Error creating item:", err);
+
+    // Если есть код ошибки из базы — вернём его
+    if (err.code) {
+      return res.status(500).json({ 
+        msg: "Database error", 
+        code: err.code, 
+        detail: err.detail || err.message 
+      });
+    }
+
+    res.status(500).json({ 
+      msg: "Unexpected error while creating item", 
+      error: err.message 
+    });
         });
   };
   

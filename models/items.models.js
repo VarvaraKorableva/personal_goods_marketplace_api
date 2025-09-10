@@ -1,4 +1,33 @@
 import { db } from "../config/pg.config.js"
+/*
+export const _createItem = async (title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city) => {
+    try {
+      // 1. Добавляем новый айтем
+      const [newItem] = await db("items")
+        .insert({
+            title, 
+            owner_id, 
+            category_id, 
+            city_id, price, 
+            size, color, 
+            condition, 
+            year_of_manufacture, 
+            description,
+            city,
+        })
+        .returning("*");
+  
+      // 2. Находим юзера по owner_id
+      const user = await db("users")
+        .where("user_id", owner_id)
+        .first();
+  
+      // 3. Возвращаем оба объекта
+      return { item: newItem, user };
+    } catch (error) {
+      throw new Error(`Error creating item: ${error.message}`);
+    }
+  };*/
 
 export const _createItem = async (title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city) => {
   try {
