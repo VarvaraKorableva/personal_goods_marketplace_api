@@ -1,6 +1,6 @@
 import { db } from "../config/pg.config.js"
 
-export const _createCategory = async (name, is_good, parent_id, image_url, slug, name_rus) => {
+export const _createCategory = async (name, is_good, parent_id, image_url, slug, name_rus, telegram = null) => {
   try {
     const result = await db("category").insert({
       name,
@@ -9,6 +9,7 @@ export const _createCategory = async (name, is_good, parent_id, image_url, slug,
       image_url,
       slug,
       name_rus,
+      telegram,
     }).returning("*");
 
     return result[0];
@@ -61,6 +62,19 @@ export const _updateCategoryParentId = async (category_id, parent_id) => {
       const result = await db("category")
           .where({ category_id })
           .update({parent_id})
+          .returning("*");
+
+      return result[0];
+  } catch (error) {
+      throw new Error(`Error updating category: ${error.message}`);
+  }
+};
+
+export const _updateCategoryName = async (category_id, name_rus) => {
+  try {
+      const result = await db("category")
+          .where({ category_id })
+          .update({name_rus})
           .returning("*");
 
       return result[0];

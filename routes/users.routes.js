@@ -10,6 +10,7 @@ import {
     adCountIncrement,
     adCountDecrement,
     updatePassword,
+    updateTelegram,
 } from "../controllers/users.controllers.js";
 
 users_router.post('/signup', createUser)
@@ -24,5 +25,6 @@ users_router.patch('/adCountIncrement/:user_id', adCountIncrement)
 users_router.patch('/adCountDecrement/:user_id', adCountDecrement)
 
 users_router.patch('/updatepassword', updatePassword)
+users_router.patch('/updatetelegram', updateTelegram)
 
 export { users_router };

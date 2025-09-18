@@ -96,6 +96,21 @@ export const _updatePassword = async (email, newPassword) => {
   }
 };
 
+
+export const _updateTelegram = async (user_id, telegram) => {
+  try {
+      const result = await db("users")
+          .where({ user_id })
+          .update({ telegram })
+          .returning("*");
+
+      return result[0];
+  } catch (error) {
+      console.error("Error updating city:", error);
+      throw error;
+  }
+};
+
 /*
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,

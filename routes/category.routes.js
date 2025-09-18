@@ -8,6 +8,7 @@ import {
     updateCategory,
     updateCategorySlug,
     updateCategoryParentId,
+    updateCategoryName,
 } from "../controllers/category.controllers.js";
   
 category_router.get('/', getAllCategory)
@@ -19,6 +20,8 @@ category_router.post('/create', (req, res, next) => {
 category_router.delete('/:category_id', deleteCategory)
 
 category_router.patch('/', updateCategoryParentId)
-category_router.patch('/img', updateCategory)
+category_router.patch('/updateimg', updateCategory)
+category_router.patch('/updatename', updateCategoryName)
+
 
 export { category_router }

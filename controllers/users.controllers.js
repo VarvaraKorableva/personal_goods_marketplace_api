@@ -13,20 +13,22 @@ import {
   _adCountIncrement,
   _adCountDecrement,
   _updatePassword,
+  _updateTelegram,
 
 } from "../models/users.models.js"
 
 const {JWT_SECRET} = process.env;
 
 export const createUser = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, telegram, } = req.body;
   try {
-    const data = await _createUser(username, email, password);
+    const data = await _createUser(username, email, password, telegram,);
     const token = jwt.sign({ email: data.email }, JWT_SECRET, { expiresIn: '7d' });
     const user = {
       user_id: data.user_id,
       username: data.username,
-      email: data.email
+      email: data.email,
+      telegram: data.telegram,
     };
     return res
       .cookie('jwt', token, { httpOnly: true, sameSite: true })
@@ -151,4 +153,21 @@ export const updatePassword = (req, res) => {
       .catch((err) => {
         res.status(404).json({ msg: "Not Found" });
       });
+};
+
+export const updateTelegram = (req, res) => {
+  const {user_id, telegram } = req.body;
+  //const { user_id } = req.params;
+  _updateTelegram(user_id, telegram)
+    .then((updatedTelegram) => {
+      if (updatedTelegram) {
+        res.json({ msg: "Successfully updated", user: updatedTelegram });
+      } else {
+        res.status(404).json({ msg: "Item not found" });
+      }
+    })
+    .catch((err) => {
+      console.error("Error updating Telegram:", err);
+      res.status(500).json({ msg: "Error, try again" });
+    });
 };
