@@ -293,7 +293,7 @@ export const _updateDescription = async (item_id, description) => {
 export const _getItemsByCategoryRecursive = async (category_id) => {
     try {
       const categoryIds = new Set([Number(category_id)]);
-  
+      
       // рекурсивная функция для обхода категорий
       const getSubCategories = async (ids) => {
         const subCategories = await db("category")

@@ -24,5 +24,7 @@ category_router.patch('/', updateCategoryParentId)
 category_router.patch('/updateimg', updateCategory)
 category_router.patch('/updatename', updateCategoryName)
 category_router.patch('/updatenameeng', updateCategoryNameEng)
+category_router.patch('/updatecategoryslug', updateCategorySlug)
+
 
 export { category_router }
