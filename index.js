@@ -10,6 +10,7 @@ import {reviews_router} from "./routes/reviews.routes.js"
 import { files_router } from "./routes/upload.routes.js"
 import { verification_router } from "./routes/verifications.routes.js"
 import { conversations_router } from "./routes/conversations.routes.js"
+import { adminItem_router } from "./routes/adminItems.routes.js"
 
 dotenv.config();
 
@@ -37,6 +38,7 @@ app.use(cors({
 app.use("/users", users_router);
 app.use("/category", category_router);
 app.use("/items", item_router);
+app.use("/itemsAdmin", adminItem_router);
 app.use("/messages", messages_router);
 app.use("/favoriteItems", favoriteItems_router);
 app.use("/reviews", reviews_router);

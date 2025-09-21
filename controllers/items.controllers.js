@@ -11,7 +11,8 @@ import {
     _updateCity,
     _updatePrice,
     _updateCondition,
-    _updateDescription
+    _updateDescription,
+    _getItemsByCategoryRecursive,
   
   } from "../models/items.models.js"
   
@@ -96,6 +97,18 @@ import {
         });
   };
 
+  //_getItemsByCategoryRecursive
+
+  export const getItemsByCategoryRecursive = (req, res) => {
+    const { category_id } = req.params;
+    _getItemsByCategoryRecursive(category_id)
+        .then((data) => {
+          res.json(data);
+        })
+        .catch((err) => {
+          res.status(404).json({ msg: "Not Found" });
+        });
+  };
 
   export const getItemsBySubCategoriesByParentId = (req, res) => {
     const { parent_id } = req.params;

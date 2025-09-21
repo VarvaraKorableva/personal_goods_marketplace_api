@@ -83,6 +83,20 @@ export const _updateCategoryName = async (category_id, name_rus) => {
   }
 };
 
+export const _updateCategoryNameEng = async (category_id, name) => {
+  
+  try {
+      const result = await db("category")
+          .where({ category_id })
+          .update({name})
+          .returning("*");
+          
+      return result[0];
+  } catch (error) {
+      throw new Error(`Error updating category: ${error.message}`);
+  }
+};
+
 /*
 CREATE TABLE category (
     category_id SERIAL PRIMARY KEY,

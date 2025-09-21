@@ -9,6 +9,7 @@ import {
     updateCategorySlug,
     updateCategoryParentId,
     updateCategoryName,
+    updateCategoryNameEng,
 } from "../controllers/category.controllers.js";
   
 category_router.get('/', getAllCategory)
@@ -22,6 +23,6 @@ category_router.delete('/:category_id', deleteCategory)
 category_router.patch('/', updateCategoryParentId)
 category_router.patch('/updateimg', updateCategory)
 category_router.patch('/updatename', updateCategoryName)
-
+category_router.patch('/updatenameeng', updateCategoryNameEng)
 
 export { category_router }

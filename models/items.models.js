@@ -1,33 +1,4 @@
 import { db } from "../config/pg.config.js"
-/*
-export const _createItem = async (title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city) => {
-    try {
-      // 1. Добавляем новый айтем
-      const [newItem] = await db("items")
-        .insert({
-            title, 
-            owner_id, 
-            category_id, 
-            city_id, price, 
-            size, color, 
-            condition, 
-            year_of_manufacture, 
-            description,
-            city,
-        })
-        .returning("*");
-  
-      // 2. Находим юзера по owner_id
-      const user = await db("users")
-        .where("user_id", owner_id)
-        .first();
-  
-      // 3. Возвращаем оба объекта
-      return { item: newItem, user };
-    } catch (error) {
-      throw new Error(`Error creating item: ${error.message}`);
-    }
-  };*/
 
 export const _createItem = async (title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city) => {
   try {
@@ -48,6 +19,27 @@ export const _createItem = async (title, owner_id, category_id, city_id, price, 
   }
 };
 
+// универсальная функция для получения всех вложенных категорий не исп
+async function getAllCategoryIds(parentId) {
+    const stack = [parentId];   // начнём с родителя
+    const result = [parentId];  // результат — сюда складываем все id
+  
+    while (stack.length > 0) {
+      const current = stack.pop();
+  
+      // ищем детей у текущего
+      const children = await db("category").select("category_id").where({ parent_id: current });
+  
+      for (const child of children) {
+        result.push(child.category_id);   // добавляем в итоговый список
+        stack.push(child.category_id);    // и добавляем в очередь на проверку
+      }
+    }
+  
+    return result;
+  }
+  
+//на удаление?
 export const _getAllItemsByCategoryId = async (category_id) => {
     try {
         
@@ -56,7 +48,7 @@ export const _getAllItemsByCategoryId = async (category_id) => {
         const categoryId = categories.map(category => category.category_id);
         categoryId.push(Number(category_id))
         
-        const items = await db("items").select("*").whereIn("category_id", categoryId).andWhere("deleted", false);
+        const items = await db("items").select("*").whereIn("category_id", categoryId).andWhere("deleted", false).andWhere("moderated", true) ;
         
         return items;
     
@@ -68,7 +60,11 @@ export const _getAllItemsByCategoryId = async (category_id) => {
 //all my, (not all sellor)
 export const _getAllItemsByUserId = async (owner_id) => {
     try {
-        const result = await db("items").select("*").where({ owner_id }).andWhere("deleted", false);
+        const result = await db("items")
+        .select("*")
+        .where({ owner_id })
+        .andWhere("deleted", false)
+        //.andWhere("moderated", true);
         return result
     } catch (error) {
         throw new Error(`error: ${error.message}`);
@@ -84,12 +80,14 @@ export const _getAllItems = async ({ page = 1, limit = 20 }) => {
       const result = await db("items")
         .select("*")
         .where("deleted", false)
+        .andWhere("moderated", true) 
         .orderBy("created_at", "desc")
         .limit(limitNum)
         .offset(offset);
   
       const [{ totalCount }] = await db("items")
         .where("deleted", false)
+        .andWhere("moderated", true) 
         .count("* as totalCount");
   
       return {
@@ -104,7 +102,7 @@ export const _getAllItems = async ({ page = 1, limit = 20 }) => {
 
 export const _getAllItemsByCityId = async (city_id) => {
     try {
-        const result = await db("items").select("*").where({ city_id }).andWhere("deleted", false);
+        const result = await db("items").select("*").where({ city_id }).andWhere("deleted", false).andWhere("moderated", true) ;
         return result
     } catch (error) {
         throw new Error(`error in _getAllItemsByCityId: ${error.message}`);
@@ -120,7 +118,7 @@ export const _deleteItem = (item_id) => {
         .where({ item_id })
         .update({ deleted: true });
 };
-
+/*
 export const _getItemById = async (item_id) => {
     try {
         const result = await db("items").select("*").where({ item_id }).andWhere("deleted", false);
@@ -129,7 +127,56 @@ export const _getItemById = async (item_id) => {
         throw new Error(`error: ${error.message}`);
     }
 };
+*/
 
+export const _getItemById = async (item_id) => {
+    try {
+      const result = await db("items as i")
+        .select(
+          "i.*",
+          "u.username as owner_name",
+          "u.telegram as owner_telegram",
+          "c.category_id",
+          "c.name as category_name",
+          "c.parent_id as parent_category_id",
+          "pc.name as parent_category_name",
+          "pc.name_rus as parent_category_name_rus"
+        )
+        .leftJoin("users as u", "i.owner_id", "u.user_id")
+        .leftJoin("category as c", "i.category_id", "c.category_id")
+        .leftJoin("category as pc", "c.parent_id", "pc.category_id")
+        .where("i.item_id", item_id)
+        .andWhere("i.deleted", false)
+        .andWhere("moderated", true) 
+  
+      return result;
+    } catch (error) {
+      throw new Error(`Error in category.models: ${error.message}`);
+    }
+  };
+
+  
+/*
+export const _getItemById = async (item_id) => {
+    try {
+      const result = await db("items")
+        .select(
+          "items.*",
+          "users.username as owner_name",
+          "users.telegram as owner_telegram"
+        )
+        .leftJoin("users", "items.owner_id", "users.user_id")
+        .where("items.item_id", item_id)
+        .andWhere("items.deleted", false)
+        //.first(); // так вернется сразу один объект вместо массива
+  
+      return result;
+    } catch (error) {
+      throw new Error(`error: ${error.message}`);
+    }
+  }; */
+
+//на удаление?
 export const _getItemsBySubCategoriesByParentId = async (parent_id) => { /////category_id
     
     try {
@@ -143,7 +190,7 @@ export const _getItemsBySubCategoriesByParentId = async (parent_id) => { /////ca
       const categoryId2 = categories2.map(category => category.category_id);
       categoryId2.push(Number(parent_id))
 
-      const items = await db("items").select("*").whereIn("category_id", categoryId2).andWhere("deleted", false);
+      const items = await db("items").select("*").whereIn("category_id", categoryId2).andWhere("deleted", false).andWhere("moderated", true) ;
       return items;
   
     } catch (error) {
@@ -242,6 +289,41 @@ export const _updateDescription = async (item_id, description) => {
         throw error;
     }
 };
+
+export const _getItemsByCategoryRecursive = async (category_id) => {
+    try {
+      const categoryIds = new Set([Number(category_id)]);
+  
+      // рекурсивная функция для обхода категорий
+      const getSubCategories = async (ids) => {
+        const subCategories = await db("category")
+          .select("category_id")
+          .whereIn("parent_id", ids);
+  
+        if (subCategories.length > 0) {
+          const newIds = subCategories.map(c => c.category_id);
+  
+          newIds.forEach(id => categoryIds.add(id));
+  
+          // рекурсивно спускаемся глубже
+          await getSubCategories(newIds);
+        }
+      };
+  
+      await getSubCategories([category_id]);
+  
+      const items = await db("items")
+        .select("*")
+        .whereIn("category_id", [...categoryIds])
+        .andWhere("deleted", false)
+        .andWhere("moderated", true) ;
+  
+      return items;
+    } catch (error) {
+      throw new Error(`Error in category.models: ${error.message}`);
+    }
+  };
+  
 
 /*
 CREATE TABLE items (

@@ -9,6 +9,7 @@ import {
   _updateCategorySlug,
   _updateCategoryParentId,
   _updateCategoryName,
+  _updateCategoryNameEng,
 } from "../models/category.models.js"
 
 export const createCategory = (req, res) => {
@@ -28,6 +29,17 @@ export const createCategory = (req, res) => {
 export const updateCategoryName = (req, res) => {
   const { category_id, name_rus } = req.body;
   _updateCategoryName( category_id, name_rus )
+    .then((data) => {
+      res.json({ msg: "Successfully updated" });
+    })
+    .catch((err) => {
+      res.status(404).json({ msg: "Error, category not updated, try again" });
+    });
+};
+
+export const updateCategoryNameEng = (req, res) => {
+  const { category_id, name } = req.body;
+  _updateCategoryNameEng( category_id, name )
     .then((data) => {
       res.json({ msg: "Successfully updated" });
     })
