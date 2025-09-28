@@ -1,18 +1,17 @@
 import {
     _createItem,
-    _getAllItemsByCategoryId,
     _getAllItemsByUserId,
     _getAllItemsByCityId,
     _deleteItem,
     _getAllItems,
     _getItemById,
-    _getItemsBySubCategoriesByParentId,
     _updateIsReserved,
     _updateCity,
     _updatePrice,
     _updateCondition,
     _updateDescription,
     _getItemsByCategoryRecursive,
+    _getItems,
   
   } from "../models/items.models.js"
   
@@ -39,17 +38,6 @@ import {
       msg: "Unexpected error while creating item", 
       error: err.message 
     });
-        });
-  };
-  
-  export const getAllItemsByCategoryId = (req, res) => {
-    const { category_id } = req.params;
-    _getAllItemsByCategoryId(category_id)
-        .then((data) => {
-          res.json(data);
-        })
-        .catch((err) => {
-          res.status(404).json({ msg: "Not Found" });
         });
   };
 
@@ -102,17 +90,6 @@ import {
   export const getItemsByCategoryRecursive = (req, res) => {
     const { category_id } = req.params;
     _getItemsByCategoryRecursive(category_id)
-        .then((data) => {
-          res.json(data);
-        })
-        .catch((err) => {
-          res.status(404).json({ msg: "Not Found" });
-        });
-  };
-
-  export const getItemsBySubCategoriesByParentId = (req, res) => {
-    const { parent_id } = req.params;
-    _getItemsBySubCategoriesByParentId(parent_id)
         .then((data) => {
           res.json(data);
         })
@@ -198,4 +175,52 @@ export const updateDescription = (req, res) => {
       console.error("Error updating description:", err);
       res.status(500).json({ msg: "Error, try again" });
     });
+};
+
+export const getItemsController = async (req, res) => {
+  try {
+    const {
+      page = 1,
+      limit = 20,
+      categoryId,
+      recursive = "false",
+      city,
+      lowPrice,
+      highPrice,
+      condition,
+      title
+    } = req.query;
+
+    const filters = {
+      city,
+      lowPrice: lowPrice ? Number(lowPrice) : undefined,
+      highPrice: highPrice ? Number(highPrice) : undefined,
+      condition,
+      title
+    };
+
+    const { result, totalCount } = await _getItems({
+      page: Number(page),
+      limit: Number(limit),
+      categoryId: categoryId ? Number(categoryId) : undefined,
+      recursive: recursive === "true",
+      filters
+    });
+
+    // Возвращаем именно { result, totalCount } — чтобы фронт находил res.result и res.totalCount
+    return res.status(200).json({
+      success: true,
+      result,
+      totalCount,
+      page: Number(page),
+      limit: Number(limit)
+    });
+  } catch (error) {
+    console.error("Error in getItemsController:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message
+    });
+  }
 };

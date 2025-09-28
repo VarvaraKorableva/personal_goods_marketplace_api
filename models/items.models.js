@@ -19,44 +19,6 @@ export const _createItem = async (title, owner_id, category_id, city_id, price, 
   }
 };
 
-// универсальная функция для получения всех вложенных категорий не исп
-async function getAllCategoryIds(parentId) {
-    const stack = [parentId];   // начнём с родителя
-    const result = [parentId];  // результат — сюда складываем все id
-  
-    while (stack.length > 0) {
-      const current = stack.pop();
-  
-      // ищем детей у текущего
-      const children = await db("category").select("category_id").where({ parent_id: current });
-  
-      for (const child of children) {
-        result.push(child.category_id);   // добавляем в итоговый список
-        stack.push(child.category_id);    // и добавляем в очередь на проверку
-      }
-    }
-  
-    return result;
-  }
-  
-//на удаление?
-export const _getAllItemsByCategoryId = async (category_id) => {
-    try {
-        
-        const categories = await db("category").select("*").where({ parent_id: category_id });
-        
-        const categoryId = categories.map(category => category.category_id);
-        categoryId.push(Number(category_id))
-        
-        const items = await db("items").select("*").whereIn("category_id", categoryId).andWhere("deleted", false).andWhere("moderated", true) ;
-        
-        return items;
-    
-      } catch (error) {
-        throw new Error(`Error in category.models: ${error.message}`);
-      }
-};
-
 //all my, (not all sellor)
 export const _getAllItemsByUserId = async (owner_id) => {
     try {
@@ -176,27 +138,6 @@ export const _getItemById = async (item_id) => {
     }
   }; */
 
-//на удаление?
-export const _getItemsBySubCategoriesByParentId = async (parent_id) => { /////category_id
-    
-    try {
-      const categories = await db("category").select("*").where({ parent_id });
-      const categoryId = categories.map(category => category.category_id);
-      categoryId.push(Number(parent_id))
-      
-      //const items = await db("items").select("*").whereIn("category_id", categoryId);
-
-      const categories2 = await db("category").select("*").whereIn("parent_id", categoryId);
-      const categoryId2 = categories2.map(category => category.category_id);
-      categoryId2.push(Number(parent_id))
-
-      const items = await db("items").select("*").whereIn("category_id", categoryId2).andWhere("deleted", false).andWhere("moderated", true) ;
-      return items;
-  
-    } catch (error) {
-      throw new Error(`Error in category.models: ${error.message}`);
-    }
-  };
   
   export const _updateIsReserved = async (item_id, user_id) => {
     try {
@@ -323,7 +264,101 @@ export const _getItemsByCategoryRecursive = async (category_id) => {
       throw new Error(`Error in category.models: ${error.message}`);
     }
   };
+
+  // models/items.model.js
+export const _getItems = async ({
+  page = 1,
+  limit = 20,
+  categoryId = null,
+  recursive = false,
+  filters = {}
+}) => {
+  try {
+    const pageNum = parseInt(page, 10) || 1;
+    const limitNum = parseInt(limit, 10) || 20;
+    const offset = (pageNum - 1) * limitNum;
+
+    let baseQuery = db("items").where("deleted", false).andWhere("moderated", true);
+
+    // категория + рекурсия
+    if (categoryId) {
+      let categoryIds = [Number(categoryId)];
+
+      if (recursive) {
+        const getSubCategories = async (ids, acc) => {
+          const subCategories = await db("category")
+            .select("category_id")
+            .whereIn("parent_id", ids);
+
+          if (subCategories.length > 0) {
+            const newIds = subCategories.map(c => c.category_id);
+            acc.push(...newIds);
+            await getSubCategories(newIds, acc);
+          }
+        };
+
+        const allIds = [...categoryIds];
+        await getSubCategories(categoryIds, allIds);
+        categoryIds = [...new Set(allIds)];
+      }
+
+      baseQuery = baseQuery.whereIn("category_id", categoryIds);
+    }
+
+    // фильтры
+    if (filters.city) {
+      baseQuery = baseQuery.andWhere("city", "ILIKE", `%${filters.city}%`);
+    }
+    if (filters.lowPrice !== undefined) {
+      baseQuery = baseQuery.andWhere("price", ">=", filters.lowPrice);
+    }
+    if (filters.highPrice !== undefined) {
+      baseQuery = baseQuery.andWhere("price", "<=", filters.highPrice);
+    }
+    if (filters.condition) {
+      baseQuery = baseQuery.andWhere({ condition: filters.condition });
+    }
+    if (filters.title) {
+      baseQuery = baseQuery.andWhere("title", "ILIKE", `%${filters.title}%`);
+    }
+
+    // подсчёт totalCount по тем же условиям
+    const countRow = await baseQuery.clone().count("* as totalCount").first();
+    const totalCount = Number(countRow?.totalCount) || 0;
+
+    // выборка с пагинацией
+    const result = await baseQuery
+      .clone()
+      .select("*")
+      .orderBy("created_at", "desc")
+      .limit(limitNum)
+      .offset(offset);
+
+    return { result, totalCount };
+  } catch (error) {
+    throw new Error(`error in getItems: ${error.message}`);
+  }
+};
+
   
+/*
+
+Все объявления с пагинацией:
+
+getItems({ page: 1, limit: 20 });
+
+
+Все объявления из категории с подкатегориями:
+
+getItems({ categoryId: 5, recursive: true });
+
+
+Только отфильтрованные по городу и цене:
+
+getItems({ filters: { city: "Tel Aviv", lowPrice: 100, highPrice: 500 } });
+
+*/
+
 
 /*
 CREATE TABLE items (
