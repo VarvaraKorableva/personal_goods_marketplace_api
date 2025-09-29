@@ -26,41 +26,11 @@ export const _getAllItemsByUserId = async (owner_id) => {
         .select("*")
         .where({ owner_id })
         .andWhere("deleted", false)
-        //.andWhere("moderated", true);
         return result
     } catch (error) {
         throw new Error(`error: ${error.message}`);
     }
 };
-
-export const _getAllItems = async ({ page = 1, limit = 20 }) => {
-    try {
-      const pageNum = parseInt(page, 10) || 1;
-      const limitNum = parseInt(limit, 10) || 20;
-      const offset = (pageNum - 1) * limitNum;
-  
-      const result = await db("items")
-        .select("*")
-        .where("deleted", false)
-        .andWhere("moderated", true) 
-        .orderBy("created_at", "desc")
-        .limit(limitNum)
-        .offset(offset);
-  
-      const [{ totalCount }] = await db("items")
-        .where("deleted", false)
-        .andWhere("moderated", true) 
-        .count("* as totalCount");
-  
-      return {
-        result,
-        totalCount
-      };
-  
-    } catch (error) {
-      throw new Error(`error: ${error.message}`);
-    }
-  };
 
 export const _getAllItemsByCityId = async (city_id) => {
     try {
@@ -70,26 +40,12 @@ export const _getAllItemsByCityId = async (city_id) => {
         throw new Error(`error in _getAllItemsByCityId: ${error.message}`);
     }
 };
-/*  
-export const _deleteItem = (item_id) => {
-    return db("items").delete("*").where({ item_id })
-};*/
 
 export const _deleteItem = (item_id) => {
     return db("items")
         .where({ item_id })
         .update({ deleted: true });
 };
-/*
-export const _getItemById = async (item_id) => {
-    try {
-        const result = await db("items").select("*").where({ item_id }).andWhere("deleted", false);
-        return result
-    } catch (error) {
-        throw new Error(`error: ${error.message}`);
-    }
-};
-*/
 
 export const _getItemById = async (item_id) => {
     try {
@@ -117,28 +73,6 @@ export const _getItemById = async (item_id) => {
     }
   };
 
-  
-/*
-export const _getItemById = async (item_id) => {
-    try {
-      const result = await db("items")
-        .select(
-          "items.*",
-          "users.username as owner_name",
-          "users.telegram as owner_telegram"
-        )
-        .leftJoin("users", "items.owner_id", "users.user_id")
-        .where("items.item_id", item_id)
-        .andWhere("items.deleted", false)
-        //.first(); // так вернется сразу один объект вместо массива
-  
-      return result;
-    } catch (error) {
-      throw new Error(`error: ${error.message}`);
-    }
-  }; */
-
-  
   export const _updateIsReserved = async (item_id, user_id) => {
     try {
         const item = await db("items")
@@ -230,7 +164,7 @@ export const _updateDescription = async (item_id, description) => {
         throw error;
     }
 };
-
+/*
 export const _getItemsByCategoryRecursive = async (category_id) => {
     try {
       const categoryIds = new Set([Number(category_id)]);
@@ -263,7 +197,7 @@ export const _getItemsByCategoryRecursive = async (category_id) => {
     } catch (error) {
       throw new Error(`Error in category.models: ${error.message}`);
     }
-  };
+  };*/
 
   // models/items.model.js
 export const _getItems = async ({

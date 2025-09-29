@@ -3,14 +3,13 @@ import {
     _getAllItemsByUserId,
     _getAllItemsByCityId,
     _deleteItem,
-    _getAllItems,
     _getItemById,
     _updateIsReserved,
     _updateCity,
     _updatePrice,
     _updateCondition,
     _updateDescription,
-    _getItemsByCategoryRecursive,
+    //_getItemsByCategoryRecursive,
     _getItems,
   
   } from "../models/items.models.js"
@@ -63,17 +62,6 @@ import {
         });
   };
 
-  export const getAllItems = (req, res) => {
-    const { page = 1, limit = 20 } = req.params;
-    _getAllItems({ page: parseInt(page), limit: parseInt(limit) })
-        .then((data) => {
-          res.json(data);
-        })
-        .catch((err) => {
-          res.status(404).json({ msg: "Not Found" });
-        });
-  };  
-
   export const deleteItem = (req, res) => {
       const { item_id } = req.params
       _deleteItem(item_id)
@@ -86,7 +74,7 @@ import {
   };
 
   //_getItemsByCategoryRecursive
-
+/*
   export const getItemsByCategoryRecursive = (req, res) => {
     const { category_id } = req.params;
     _getItemsByCategoryRecursive(category_id)
@@ -96,7 +84,7 @@ import {
         .catch((err) => {
           res.status(404).json({ msg: "Not Found" });
         });
-  };
+  };*/
 
   export const updateIsReserved = (req, res) => {
     const { item_id, user_id } = req.params
