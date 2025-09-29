@@ -8,7 +8,7 @@ import {
     getItemByIdAdmin,
     getItemsByCategoryRecursiveAdmin,
     updateModeratedAdmin,
-} from "../controllers/adminitems.controllers.js";
+} from "../controllers/adminItems.controllers.js";
 
 adminItem_router.get('/admin/userId/:owner_id', getAllItemsByUserIdAdmin)
 adminItem_router.get('/admin/all/:page/:limit', getAllItemsAdmin)

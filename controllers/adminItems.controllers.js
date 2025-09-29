@@ -6,7 +6,7 @@ import {
     _getItemsByCategoryRecursiveAdmin,
     _updateModeratedAdmin,
   
-  } from "../models/adminitems.models.js"
+  } from "../models/adminItems.models.js"
 
 
 
