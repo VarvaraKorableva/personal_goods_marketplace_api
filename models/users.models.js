@@ -41,7 +41,7 @@ export const _getAllUsers = () => {
 export const _deleteUser = (user_id) => {
   return db("users").delete("*").where({ user_id })
 };
-
+/*
 export const _adCountIncrement = async (user_id) => {
   try {
       const result = await db("users")
@@ -74,7 +74,7 @@ export const _adCountDecrement = async (user_id) => {
   } catch (error) {
     throw new Error(`Error in messages.models: ${error.message}`);
   }
-};
+};*/
 
 export const _updatePassword = async (email, newPassword) => {
   try {

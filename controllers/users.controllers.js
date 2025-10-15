@@ -10,8 +10,8 @@ import {
   _getUserByEmail,
   _deleteUser,
   _getUserById,
-  _adCountIncrement,
-  _adCountDecrement,
+ // _adCountIncrement,
+ // _adCountDecrement,
   _updatePassword,
   _updateTelegram,
 
@@ -117,7 +117,7 @@ export const loginUser = async (req, res) => {
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };
-
+/*
 export const adCountIncrement = (req, res) => {
   const { user_id } = req.params
   
@@ -141,7 +141,7 @@ export const adCountDecrement = (req, res) => {
       .catch((err) => {
         res.status(404).json({ msg: "Not Found" });
       });
-};
+};*/
 
 export const updatePassword = (req, res) => {
   const { email, newPassword } = req.body;

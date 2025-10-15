@@ -13,6 +13,10 @@ export const _createItem = async (title, owner_id, category_id, city_id, price, 
         description,
         city,
     }).returning("*");
+    await db("users")
+    .where({ user_id: owner_id })
+    .increment("ad_count", 1);
+
     return result[0];
   }catch (error) {
     throw new Error(`Error creating item: ${error.message}`);
@@ -41,11 +45,34 @@ export const _getAllItemsByCityId = async (city_id) => {
     }
 };
 
-export const _deleteItem = (item_id) => {
-    return db("items")
-        .where({ item_id })
-        .update({ deleted: true });
+export const _deleteItem = async (item_id) => {
+  try {
+    // Находим владельца по item_id
+    const item = await db("items")
+      .select("owner_id")
+      .where({ item_id })
+      .first();
+
+    if (!item) {
+      throw new Error("Item not found");
+    }
+
+    // Помечаем объявление как удалённое
+    await db("items")
+      .where({ item_id })
+      .update({ deleted: true });
+
+    // Уменьшаем ad_count у владельца
+    await db("users")
+      .where({ user_id: item.owner_id })
+      .decrement("ad_count", 1);
+
+    return { success: true };
+  } catch (error) {
+    throw new Error(`Error deleting item: ${error.message}`);
+  }
 };
+
 
 export const _getItemById = async (item_id) => {
     try {
