@@ -45,7 +45,7 @@ export const _getAllItemsByCityId = async (city_id) => {
     }
 };
 
-export const _deleteItem = async (item_id) => {
+export const _deleteItem = async (item_id, reason) => {
   try {
     // Находим владельца по item_id
     const item = await db("items")
@@ -60,7 +60,10 @@ export const _deleteItem = async (item_id) => {
     // Помечаем объявление как удалённое
     await db("items")
       .where({ item_id })
-      .update({ deleted: true });
+      .update({
+        deleted: true,
+        deletion_reason: reason,
+      });
 
     // Уменьшаем ad_count у владельца
     await db("users")
@@ -191,42 +194,7 @@ export const _updateDescription = async (item_id, description) => {
         throw error;
     }
 };
-/*
-export const _getItemsByCategoryRecursive = async (category_id) => {
-    try {
-      const categoryIds = new Set([Number(category_id)]);
-      
-      // рекурсивная функция для обхода категорий
-      const getSubCategories = async (ids) => {
-        const subCategories = await db("category")
-          .select("category_id")
-          .whereIn("parent_id", ids);
-  
-        if (subCategories.length > 0) {
-          const newIds = subCategories.map(c => c.category_id);
-  
-          newIds.forEach(id => categoryIds.add(id));
-  
-          // рекурсивно спускаемся глубже
-          await getSubCategories(newIds);
-        }
-      };
-  
-      await getSubCategories([category_id]);
-  
-      const items = await db("items")
-        .select("*")
-        .whereIn("category_id", [...categoryIds])
-        .andWhere("deleted", false)
-        .andWhere("moderated", true) ;
-  
-      return items;
-    } catch (error) {
-      throw new Error(`Error in category.models: ${error.message}`);
-    }
-  };*/
 
-  // models/items.model.js
 export const _getItems = async ({
   page = 1,
   limit = 20,
@@ -300,25 +268,6 @@ export const _getItems = async ({
     throw new Error(`error in getItems: ${error.message}`);
   }
 };
-
-  
-/*
-
-Все объявления с пагинацией:
-
-getItems({ page: 1, limit: 20 });
-
-
-Все объявления из категории с подкатегориями:
-
-getItems({ categoryId: 5, recursive: true });
-
-
-Только отфильтрованные по городу и цене:
-
-getItems({ filters: { city: "Tel Aviv", lowPrice: 100, highPrice: 500 } });
-
-*/
 
 
 /*

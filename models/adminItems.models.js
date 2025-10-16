@@ -117,3 +117,19 @@ export const _getItemsByCategoryRecursiveAdmin = async (category_id) => {
         throw new Error(`error: ${error.message}`);
     }
 };  
+
+export const _getReasonItemsAdmin = async ({ reason }) => {
+  try {
+    const [{ totalCount }] = await db("items")
+      
+      .where("deleted", true)
+      .andWhere("moderated", true) 
+      .andWhere('deletion_reason', reason)
+      .count("* as totalCount");
+
+    return totalCount
+
+  } catch (error) {
+    throw new Error(`error: ${error.message}`);
+  }
+};

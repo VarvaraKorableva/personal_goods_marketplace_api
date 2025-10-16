@@ -9,7 +9,6 @@ import {
     _updatePrice,
     _updateCondition,
     _updateDescription,
-    //_getItemsByCategoryRecursive,
     _getItems,
   
   } from "../models/items.models.js"
@@ -64,7 +63,8 @@ import {
 
   export const deleteItem = (req, res) => {
       const { item_id } = req.params
-      _deleteItem(item_id)
+      const { reason } = req.body
+      _deleteItem(item_id, reason)
         .then((data) => {
           res.json({ msg: "Deleted" })
         })
@@ -72,19 +72,6 @@ import {
           res.status(404).json({ msg: "Not Found" });
         });
   };
-
-  //_getItemsByCategoryRecursive
-/*
-  export const getItemsByCategoryRecursive = (req, res) => {
-    const { category_id } = req.params;
-    _getItemsByCategoryRecursive(category_id)
-        .then((data) => {
-          res.json(data);
-        })
-        .catch((err) => {
-          res.status(404).json({ msg: "Not Found" });
-        });
-  };*/
 
   export const updateIsReserved = (req, res) => {
     const { item_id, user_id } = req.params

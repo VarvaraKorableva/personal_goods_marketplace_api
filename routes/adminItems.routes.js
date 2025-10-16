@@ -8,6 +8,7 @@ import {
     getItemByIdAdmin,
     getItemsByCategoryRecursiveAdmin,
     updateModeratedAdmin,
+    getReasonItemsAdmin
 } from "../controllers/adminItems.controllers.js";
 
 adminItem_router.get('/admin/userId/:owner_id', getAllItemsByUserIdAdmin)
@@ -17,6 +18,7 @@ adminItem_router.patch('/admin/:item_id', deleteItemAdmin)
 adminItem_router.get('/admin/getItemsByCategoryRecursive/:category_id', getItemsByCategoryRecursiveAdmin)
 
 adminItem_router.patch('/admin/updateModerated/:item_id', updateModeratedAdmin)
+adminItem_router.get('/admin', getReasonItemsAdmin)
 
 
 export { adminItem_router }

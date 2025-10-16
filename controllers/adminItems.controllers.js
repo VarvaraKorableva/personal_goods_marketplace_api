@@ -5,6 +5,7 @@ import {
     _getItemByIdAdmin,
     _getItemsByCategoryRecursiveAdmin,
     _updateModeratedAdmin,
+    _getReasonItemsAdmin,
   
   } from "../models/adminItems.models.js"
 
@@ -83,3 +84,17 @@ export const updateModeratedAdmin = (req, res) => {
       res.status(500).json({ msg: "Error, try again" });
     });
 };
+
+export const getReasonItemsAdmin = (req, res) => {
+  const { reason } = req.query;
+
+  _getReasonItemsAdmin({
+    reason
+  })
+      .then((data) => {
+        res.json(data);
+      })
+      .catch((err) => {
+        res.status(404).json({ msg: "Not Found" });
+      });
+};  
