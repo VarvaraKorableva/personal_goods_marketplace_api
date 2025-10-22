@@ -14,8 +14,8 @@ import {
   } from "../models/items.models.js"
   
   export const createItem = (req, res) => {
-      const { title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city, } = req.body;
-      _createItem( title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city )
+      const { title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city, is_real_estate, is_rent} = req.body;
+      _createItem( title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city, is_real_estate, is_rent )
         .then((data) => {
           res.json(data);
         })

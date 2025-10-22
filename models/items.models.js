@@ -1,6 +1,6 @@
 import { db } from "../config/pg.config.js"
 
-export const _createItem = async (title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city) => {
+export const _createItem = async (title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city, is_real_estate, is_rent) => {
   try {
     const result = await db("items").insert({
         title, 
@@ -12,6 +12,8 @@ export const _createItem = async (title, owner_id, category_id, city_id, price, 
         year_of_manufacture, 
         description,
         city,
+        is_real_estate,
+        is_rent,
     }).returning("*");
     await db("users")
     .where({ user_id: owner_id })
