@@ -13,8 +13,8 @@ import {
 } from "../models/category.models.js"
 
 export const createCategory = (req, res) => {
-    const { name, is_good, parent_id, image_url, slug, name_rus, is_real_estate } = req.body;
-    _createCategory( name, is_good, parent_id, image_url, slug, name_rus, is_real_estate )
+    const { name, is_good, parent_id, image_url, slug, name_rus, is_real_estate, is_rent } = req.body;
+    _createCategory( name, is_good, parent_id, image_url, slug, name_rus, is_real_estate, is_rent )
       .then((data) => {
         res.json({ msg: "Successfully added" });
       })
