@@ -18,7 +18,7 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
+/*
 app.use(cors({
   credentials: true,
   origin: [
@@ -37,7 +37,18 @@ app.use(cors({
     'http://www.goods-israel.com',
     'https://www.goods-israel.com'
   ],
+}));*/
+
+app.use(cors({
+  credentials: true,
+  origin: [
+    'https://personal-goods-marketplace-client.onrender.com',
+    'https://goods-israel.com',
+    'https://www.goods-israel.com',
+  ],
 }));
+
+app.options('*', cors());
 
 app.use("/users", users_router);
 app.use("/category", category_router);
