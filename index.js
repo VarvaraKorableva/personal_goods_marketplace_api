@@ -32,6 +32,10 @@ app.use(cors({
     'http://personal-goods-marketplace-client.onrender.com',
     'http://personal-goods-marketplace-api.onrender.com',
     'https://personal-goods-marketplace-api.onrender.com',
+    'https://goods-israel.com/',
+    'http://goods-israel.com/',
+    'http://www.goods-israel.com',
+    'https://www.goods-israel.com'
   ],
 }));
 
