@@ -14,6 +14,7 @@ import {
   _adCountDecrement,
   _updatePassword,
   _updateTelegram,
+  _updateUserName,
 
 } from "../models/users.models.js"
 
@@ -171,3 +172,20 @@ export const updateTelegram = (req, res) => {
       res.status(500).json({ msg: "Error, try again" });
     });
 };
+
+export const updateUserName = (req, res) => {
+  const {user_id, username } = req.body;
+  _updateUserName(user_id, username)
+    .then((updatedUserName) => {
+      if (updatedUserName) {
+        res.json({ msg: "Successfully updated", user: updatedUserName });
+      } else {
+        res.status(404).json({ msg: "Item not found" });
+      }
+    })
+    .catch((err) => {
+      console.error("Error updating userName:", err);
+      res.status(500).json({ msg: "Error, try again" });
+    });
+};
+

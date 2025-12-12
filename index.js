@@ -18,7 +18,7 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-/*
+
 app.use(cors({
   credentials: true,
   origin: [
@@ -28,20 +28,6 @@ app.use(cors({
     'https://localhost:3000',
     'https://localhost:3002',
     'http://localhost:3002',
-    'https://personal-goods-marketplace-client.onrender.com',
-    'http://personal-goods-marketplace-client.onrender.com',
-    'http://personal-goods-marketplace-api.onrender.com',
-    'https://personal-goods-marketplace-api.onrender.com',
-    'https://goods-israel.com/',
-    'http://goods-israel.com/',
-    'http://www.goods-israel.com',
-    'https://www.goods-israel.com'
-  ],
-}));*/
-
-app.use(cors({
-  credentials: true,
-  origin: [
     'https://personal-goods-marketplace-client.onrender.com',
     'https://goods-israel.com',
     'https://www.goods-israel.com',

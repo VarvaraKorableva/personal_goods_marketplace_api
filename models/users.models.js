@@ -109,6 +109,20 @@ export const _updateTelegram = async (user_id, telegram) => {
   }
 };
 
+export const _updateUserName = async (user_id, username) => {
+  try {
+      const result = await db("users")
+          .where({ user_id })
+          .update({ username })
+          .returning("*");
+
+      return result[0];
+  } catch (error) {
+      console.error("Error updating city:", error);
+      throw error;
+  }
+};
+
 /*
 CREATE TABLE users (
     user_id SERIAL PRIMARY KEY,
