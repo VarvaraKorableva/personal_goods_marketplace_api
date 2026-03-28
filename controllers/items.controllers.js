@@ -10,12 +10,13 @@ import {
     _updateCondition,
     _updateDescription,
     _getItems,
+    _updateItemСategoryId,
   
   } from "../models/items.models.js"
   
   export const createItem = (req, res) => {
-      const { title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city, is_real_estate, is_rent} = req.body;
-      _createItem( title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city, is_real_estate, is_rent )
+      const { title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city, is_real_estate, is_rent, original_language, city_ru, city_en, city_he} = req.body;
+      _createItem( title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city, is_real_estate, is_rent, original_language, city_ru, city_en, city_he )
         .then((data) => {
           res.json(data);
         })
@@ -114,6 +115,26 @@ export const updatePrice = (req, res) => {
     })
     .catch((err) => {
       console.error("Error updating price:", err);
+      res.status(500).json({ msg: "Error, try again" });
+    });
+};
+
+//
+
+export const updateItemСategoryId = (req, res) => {
+  const { category_id } = req.body;
+  const { item_id } = req.params;
+
+  _updateItemСategoryId(item_id, category_id)
+    .then((updatedItem) => {
+      if (updatedItem) {
+        res.json({ msg: "Successfully updated", item: updatedItem });
+      } else {
+        res.status(404).json({ msg: "Item not found" });
+      }
+    })
+    .catch((err) => {
+      console.error("Error updating category_id:", err);
       res.status(500).json({ msg: "Error, try again" });
     });
 };

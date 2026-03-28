@@ -20,7 +20,7 @@ category_router.post('/create', (req, res, next) => {
   }, createCategory);
 category_router.delete('/:category_id', deleteCategory)
 
-category_router.patch('/', updateCategoryParentId)
+category_router.patch('/update-category-parent-id', updateCategoryParentId)
 category_router.patch('/updateimg', updateCategory)
 category_router.patch('/updatename', updateCategoryName)
 category_router.patch('/updatenameeng', updateCategoryNameEng)

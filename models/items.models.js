@@ -1,6 +1,6 @@
 import { db } from "../config/pg.config.js"
 
-export const _createItem = async (title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city, is_real_estate, is_rent) => {
+export const _createItem = async (title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city, is_real_estate, is_rent, original_language, city_ru, city_en, city_he) => {
   try {
     const result = await db("items").insert({
         title, 
@@ -14,10 +14,14 @@ export const _createItem = async (title, owner_id, category_id, city_id, price, 
         city,
         is_real_estate,
         is_rent,
+        original_language,
+        city_ru, city_en, city_he
     }).returning("*");
     await db("users")
     .where({ user_id: owner_id })
     .increment("ad_count", 1);
+
+    //console.log('item', result[0])
 
     return result[0];
   }catch (error) {
@@ -181,6 +185,21 @@ export const _updateCondition = async (item_id, condition) => {
         console.error("Error updating price:", error);
         throw error;
     }
+};
+
+export const _updateItemСategoryId = async (item_id, category_id) => {
+  console.log('category_id', category_id)
+  try {
+      const result = await db("items")
+          .where({ item_id })
+          .update({ category_id })
+          .returning("*");
+
+      return result[0];
+  } catch (error) {
+      console.error("Error updating price:", error);
+      throw error;
+  }
 };
 
 export const _updateDescription = async (item_id, description) => {

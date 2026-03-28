@@ -11,6 +11,7 @@ import {
     updateDescription,
     updateCondition,
     getItemsController,
+    updateItemСategoryId,
 } from "../controllers/items.controllers.js";
 
 item_router.get('/userId/:owner_id', getAllItemsByUserId)
@@ -23,5 +24,7 @@ item_router.patch('/updateCity/:item_id', updateCity)
 item_router.patch('/updatePrice/:item_id', updatePrice)
 item_router.patch('/updateDescription/:item_id', updateDescription)
 item_router.patch('/updateCondition/:item_id', updateCondition)
+item_router.patch('/update-item-category-id/:item_id', updateItemСategoryId)
+
 
 export { item_router }
