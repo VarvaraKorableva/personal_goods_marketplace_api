@@ -256,9 +256,19 @@ export const _getItems = async ({
     }
 
     // фильтры
-    if (filters.city) {
+    /*if (filters.city) {
       baseQuery = baseQuery.andWhere("city", "ILIKE", `%${filters.city}%`);
+    }*/
+    if (filters.city) {
+      const citySearch = `%${filters.city.toLowerCase()}%`;
+      baseQuery = baseQuery.andWhere((qb) => {
+        qb.whereRaw("LOWER(city_ru) LIKE ?", [citySearch])
+          .orWhereRaw("LOWER(city_en) LIKE ?", [citySearch])
+          .orWhereRaw("LOWER(city_he) LIKE ?", [citySearch])
+          .orWhereRaw("LOWER(city) LIKE ?", [citySearch]); // старое поле city тоже оставляем на всякий случай
+      });
     }
+
     if (filters.lowPrice !== undefined) {
       baseQuery = baseQuery.andWhere("price", ">=", filters.lowPrice);
     }
