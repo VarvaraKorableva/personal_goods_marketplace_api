@@ -21,7 +21,7 @@ export const _createItem = async (title, owner_id, category_id, city_id, price, 
     .where({ user_id: owner_id })
     .increment("ad_count", 1);
 
-    //console.log('item', result[0])
+    console.log('item', result[0])
 
     return result[0];
   }catch (error) {

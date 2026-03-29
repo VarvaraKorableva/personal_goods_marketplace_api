@@ -16,6 +16,7 @@ import {
   
   export const createItem = (req, res) => {
       const { title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city, is_real_estate, is_rent, original_language, city_ru, city_en, city_he} = req.body;
+      console.log('city_he', city_he)
       _createItem( title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city, is_real_estate, is_rent, original_language, city_ru, city_en, city_he )
         .then((data) => {
           res.json(data);
