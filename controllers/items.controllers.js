@@ -15,9 +15,13 @@ import {
   } from "../models/items.models.js"
   
   export const createItem = (req, res) => {
-      const { title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city, is_real_estate, is_rent, original_language, city_ru, city_en, city_he} = req.body;
-      console.log('city_he', city_he)
-      _createItem( title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city, is_real_estate, is_rent, original_language, city_ru, city_en, city_he )
+      const { title, owner_id, category_id, city_id, 
+        price, size, color, condition, year_of_manufacture, 
+        description, city, is_real_estate, is_rent, 
+        original_language, city_ru, city_en, city_he, 
+        condition_ru, condition_en, condition_he,
+      } = req.body;
+      _createItem( title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city, is_real_estate, is_rent, original_language, city_ru, city_en, city_he, condition_ru, condition_en, condition_he, )
         .then((data) => {
           res.json(data);
         })

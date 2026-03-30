@@ -1,6 +1,11 @@
 import { db } from "../config/pg.config.js"
 
-export const _createItem = async (title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city, is_real_estate, is_rent, original_language, city_ru, city_en, city_he) => {
+export const _createItem = async (
+  title, owner_id, category_id, city_id, price, size, color, 
+  condition, year_of_manufacture, description, city, is_real_estate, 
+  is_rent, original_language, city_ru, city_en, city_he,
+  condition_ru, condition_en, condition_he,
+  ) => {
   try {
     const result = await db("items").insert({
         title, 
@@ -15,7 +20,8 @@ export const _createItem = async (title, owner_id, category_id, city_id, price, 
         is_real_estate,
         is_rent,
         original_language,
-        city_ru, city_en, city_he
+        city_ru, city_en, city_he,
+        condition_ru, condition_en, condition_he,
     }).returning("*");
     await db("users")
     .where({ user_id: owner_id })
