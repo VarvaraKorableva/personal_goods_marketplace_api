@@ -5,6 +5,8 @@ export const _createItem = async (
   condition, year_of_manufacture, description, city, is_real_estate, 
   is_rent, original_language, city_ru, city_en, city_he,
   condition_ru, condition_en, condition_he,
+  title_ru, title_en, title_he,
+  description_ru, description_en, description_he,
   ) => {
   try {
     const result = await db("items").insert({
@@ -22,12 +24,12 @@ export const _createItem = async (
         original_language,
         city_ru, city_en, city_he,
         condition_ru, condition_en, condition_he,
+        title_ru, title_en, title_he,
+        description_ru, description_en, description_he,
     }).returning("*");
     await db("users")
     .where({ user_id: owner_id })
     .increment("ad_count", 1);
-
-    console.log('item', result[0])
 
     return result[0];
   }catch (error) {

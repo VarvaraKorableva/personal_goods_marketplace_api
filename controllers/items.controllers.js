@@ -1,3 +1,5 @@
+
+import { translateAll } from '../services/translation.service.js';
 import {
     _createItem,
     _getAllItemsByUserId,
@@ -13,37 +15,64 @@ import {
     _updateItemСategoryId,
   
   } from "../models/items.models.js"
-  
-  export const createItem = (req, res) => {
-      const { title, owner_id, category_id, city_id, 
-        price, size, color, condition, year_of_manufacture, 
-        description, city, is_real_estate, is_rent, 
-        original_language, city_ru, city_en, city_he, 
-        condition_ru, condition_en, condition_he,
-      } = req.body;
-      _createItem( title, owner_id, category_id, city_id, price, size, color, condition, year_of_manufacture, description, city, is_real_estate, is_rent, original_language, city_ru, city_en, city_he, condition_ru, condition_en, condition_he, )
-        .then((data) => {
-          res.json(data);
-        })
-        .catch((err) => {
-          //res.status(404).json({ msg: "Error, category not added, try again" });
-          console.error("Error creating item:", err);
 
-    // Если есть код ошибки из базы — вернём его
-    if (err.code) {
-      return res.status(500).json({ 
-        msg: "Database error", 
-        code: err.code, 
-        detail: err.detail || err.message 
-      });
-    }
+export const createItem = async (req, res) => {
+  try {
+    const {
+      title, owner_id, category_id, city_id,
+      price, size, color, condition, year_of_manufacture,
+      description, city, is_real_estate, is_rent,
+      original_language,
+      city_ru, city_en, city_he,
+      condition_ru, condition_en, condition_he,
+    } = req.body;
 
-    res.status(500).json({ 
-      msg: "Unexpected error while creating item", 
-      error: err.message 
+    const translations = await translateAll({
+      title,
+      description,
+      language: original_language,
     });
-        });
-  };
+
+    const data = await _createItem(
+      title,
+      owner_id,
+      category_id,
+      city_id,
+      price,
+      size,
+      color,
+      condition,
+      year_of_manufacture,
+      description,
+      city,
+      is_real_estate,
+      is_rent,
+      original_language,
+      city_ru,
+      city_en,
+      city_he,
+      condition_ru,
+      condition_en,
+      condition_he,
+      translations.title_rus,
+      translations.title_en,
+      translations.title_he,
+      translations.description_rus,
+      translations.description_en,
+      translations.description_he
+    );
+
+    res.json(data);
+
+  } catch (err) {
+    console.error("Error creating item:", err);
+
+    res.status(500).json({
+      msg: "Unexpected error while creating item",
+      error: err.message
+    });
+  }
+};
 
   export const getAllItemsByUserId = (req, res) => {
     const { owner_id } = req.params;
