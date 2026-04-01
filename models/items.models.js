@@ -90,7 +90,6 @@ export const _deleteItem = async (item_id, reason) => {
   }
 };
 
-
 export const _getItemById = async (item_id) => {
     try {
       const result = await db("items as i")
@@ -102,7 +101,8 @@ export const _getItemById = async (item_id) => {
           "c.name as category_name",
           "c.parent_id as parent_category_id",
           "pc.name as parent_category_name",
-          "pc.name_rus as parent_category_name_rus"
+          "pc.name_rus as parent_category_name_rus",
+          "pc.name_he as parent_category_name_he"
         )
         .leftJoin("users as u", "i.owner_id", "u.user_id")
         .leftJoin("category as c", "i.category_id", "c.category_id")

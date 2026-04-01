@@ -10,11 +10,12 @@ import {
   _updateCategoryParentId,
   _updateCategoryName,
   _updateCategoryNameEng,
+  _updateCategoryNameHe,
 } from "../models/category.models.js"
 
 export const createCategory = (req, res) => {
-    const { name, is_good, parent_id, image_url, slug, name_rus, is_real_estate, is_rent } = req.body;
-    _createCategory( name, is_good, parent_id, image_url, slug, name_rus, is_real_estate, is_rent )
+    const { name, is_good, parent_id, image_url, slug, name_rus, name_he, is_real_estate, is_rent } = req.body;
+    _createCategory( name, is_good, parent_id, image_url, slug, name_rus, name_he, is_real_estate, is_rent )
       .then((data) => {
         res.json({ msg: "Successfully added" });
       })
@@ -40,6 +41,17 @@ export const updateCategoryName = (req, res) => {
 export const updateCategoryNameEng = (req, res) => {
   const { category_id, name } = req.body;
   _updateCategoryNameEng( category_id, name )
+    .then((data) => {
+      res.json({ msg: "Successfully updated" });
+    })
+    .catch((err) => {
+      res.status(404).json({ msg: "Error, category not updated, try again" });
+    });
+};
+
+export const updateCategoryNameHe = (req, res) => {
+  const { category_id, name_he } = req.body;
+  _updateCategoryNameHe( category_id, name_he )
     .then((data) => {
       res.json({ msg: "Successfully updated" });
     })
