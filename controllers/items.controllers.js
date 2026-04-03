@@ -13,6 +13,7 @@ import {
     _updateDescription,
     _getItems,
     _updateItemСategoryId,
+    _updateItemTitle,
   
   } from "../models/items.models.js"
 
@@ -120,9 +121,9 @@ export const createItem = async (req, res) => {
   };
 
   export const updateCity = (req, res) => {
-    const { city } = req.body;
+    const { city, city_ru, city_en, city_he } = req.body;
     const { item_id } = req.params;
-    _updateCity(item_id, city)
+    _updateCity(item_id, city, city_ru, city_en, city_he)
       .then((updatedItem) => {
         if (updatedItem) {
           res.json({ msg: "Successfully updated", item: updatedItem });
@@ -134,6 +135,23 @@ export const createItem = async (req, res) => {
         console.error("Error updating city:", err);
         res.status(500).json({ msg: "Error, try again" });
       });
+};
+
+export const updateItemTitle = (req, res) => {
+  const { title, title_ru, title_en, title_he } = req.body;
+  const { item_id } = req.params;
+  _updateItemTitle(item_id, title, title_ru, title_en, title_he)
+    .then((updatedItem) => {
+      if (updatedItem) {
+        res.json({ msg: "Successfully updated", item: updatedItem });
+      } else {
+        res.status(404).json({ msg: "Item not found" });
+      }
+    })
+    .catch((err) => {
+      console.error("Error updating item:", err);
+      res.status(500).json({ msg: "Error, try again" });
+    });
 };
 
 export const updatePrice = (req, res) => {

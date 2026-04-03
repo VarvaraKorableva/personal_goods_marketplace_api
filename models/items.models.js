@@ -117,7 +117,7 @@ export const _getItemById = async (item_id) => {
     }
   };
 
-  export const _updateIsReserved = async (item_id, user_id) => {
+export const _updateIsReserved = async (item_id, user_id) => {
     try {
         const item = await db("items")
             .where({ item_id, owner_id: user_id })
@@ -140,7 +140,6 @@ export const _getItemById = async (item_id) => {
     }
 };
 
-
 export const _updateImagesArr = async (item_id, imagesArr) => {
     try {
         const result = await db("items")
@@ -153,11 +152,16 @@ export const _updateImagesArr = async (item_id, imagesArr) => {
     }
 };
 
-export const _updateCity = async (item_id, city) => {
+export const _updateCity = async (item_id, city, city_ru, city_en, city_he) => {
     try {
         const result = await db("items")
             .where({ item_id })
-            .update({ city })
+            .update({
+              city,
+              city_ru,
+              city_en,
+              city_he
+          })
             .returning("*");
 
         return result[0];
@@ -165,6 +169,25 @@ export const _updateCity = async (item_id, city) => {
         console.error("Error updating city:", error);
         throw error;
     }
+};
+
+export const _updateItemTitle = async (item_id, title, title_ru, title_en, title_he,) => {
+  try {
+      const result = await db("items")
+          .where({ item_id })
+          .update({
+            title,
+            title_ru, 
+            title_en, 
+            title_he,
+        })
+          .returning("*");
+
+      return result[0];
+  } catch (error) {
+      console.error("Error updating city:", error);
+      throw error;
+  }
 };
 
 export const _updatePrice = async (item_id, price) => {
